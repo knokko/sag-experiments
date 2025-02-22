@@ -29,4 +29,6 @@ class YamlFile(source: File) {
 	fun write(destination: File) {
 		Files.write(destination.toPath(), entries.entries.map { "${it.key}: ${it.value}" })
 	}
+
+	fun get(key: String) = entries[key]
 }

@@ -19,11 +19,12 @@ private class ExperimentManager {
 
 	private val generationThreads = mutableListOf<Thread>()
 	private val evaluationThreads = mutableListOf<Thread>()
+	private val classificationThreads = mutableListOf<Thread>()
 
 	fun run() {
-		// TODO Multiple workers?
-		generationThreads.add(GenerationWorker(sourceQueue, jobQueue, generationErrorQueue).start())
-		evaluationThreads.add(EvaluationWorker(jobQueue, evaluationQueue).start())
+		repeat(5) { generationThreads.add(GenerationWorker(sourceQueue, jobQueue, generationErrorQueue).start()) }
+		repeat(10) { evaluationThreads.add(EvaluationWorker(jobQueue, evaluationQueue).start()) }
+		classificationThreads.add(ClassificationWorker(evaluationQueue).start())
 
 		while (true) {
 			val userInput = readlnOrNull() ?: break
@@ -44,9 +45,11 @@ private class ExperimentManager {
 
 	private fun stopGracefully() {
 		println("Stopping gracefully... press Control + C to force")
-		while (sourceQueue.isNotEmpty()) sleep(100)
-		for (thread in generationThreads) thread.interrupt()
-		for (thread in generationThreads) thread.join()
+		if (generationThreads.any { it.isAlive }) {
+			while (sourceQueue.isNotEmpty()) sleep(100)
+			for (thread in generationThreads) thread.interrupt()
+			for (thread in generationThreads) thread.join()
+		}
 
 		while (true) {
 			val nextError = generationErrorQueue.poll() ?: break
@@ -54,11 +57,17 @@ private class ExperimentManager {
 			nextError.print()
 		}
 
-		while (jobQueue.isNotEmpty()) sleep(100)
-		for (thread in evaluationThreads) thread.interrupt()
-		for (thread in evaluationThreads) thread.join()
+		if (evaluationThreads.any { it.isAlive }) {
+			while (jobQueue.isNotEmpty()) sleep(100)
+			for (thread in evaluationThreads) thread.interrupt()
+			for (thread in evaluationThreads) thread.join()
+		}
 
-		// TODO Classification threads
+		if (classificationThreads.any { it.isAlive }) {
+			while (evaluationQueue.isNotEmpty()) sleep(100)
+			for (thread in classificationThreads) thread.interrupt()
+			for (thread in classificationThreads) thread.join()
+		}
 	}
 
 	private fun generate(userInput: String) {

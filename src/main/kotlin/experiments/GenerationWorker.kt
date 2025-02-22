@@ -1,6 +1,7 @@
 package experiments
 
 import java.io.File
+import java.lang.Integer.parseInt
 import java.nio.file.Files
 import java.util.Queue
 import java.util.concurrent.BlockingQueue
@@ -39,7 +40,9 @@ class GenerationWorker(
 		if (process.waitFor(10, TimeUnit.SECONDS)) {
 			val exitCode = process.exitValue()
 			if (exitCode == 0) {
-				for (jobSet in collect(tempConfig, tempJobsFolder, source.amount)) jobQueue.add(jobSet)
+				for (jobSet in collect(
+					tempConfig, tempJobsFolder, source.amount, parseInt(source.config.get("number_of_cores")))
+				) jobQueue.add(jobSet)
 			} else {
 				errorQueue.add(JobGenerationNonZero(exitCode, process.inputReader().readLines(), process.errorReader().readLines()))
 				tempConfig.delete()
@@ -54,7 +57,7 @@ class GenerationWorker(
 	}
 }
 
-private fun collect(configFile: File, outputFolder: File, amount: Int): Collection<JobSet> {
+private fun collect(configFile: File, outputFolder: File, amount: Int, numCores: Int): Collection<JobSet> {
 	var jobsFolder = outputFolder
 	fun reportInvalid(): Nothing {
 		throw IllegalArgumentException("invalid jobs folder $outputFolder -> $jobsFolder")
@@ -81,7 +84,7 @@ private fun collect(configFile: File, outputFolder: File, amount: Int): Collecti
 		val precedenceFile = files.find { it.name.endsWith("_$counter.prec.csv") } ?: reportInvalid()
 		jobsFile.deleteOnExit()
 		precedenceFile.deleteOnExit()
-		result.add(JobSet(configFile, jobsFile, precedenceFile))
+		result.add(JobSet(configFile, numCores, jobsFile, precedenceFile))
 	}
 	return result
 }
