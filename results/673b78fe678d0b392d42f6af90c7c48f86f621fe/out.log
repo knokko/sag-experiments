@@ -1,0 +1,62 @@
+The given problem seems to be unschedulable using our scheduler, and the rating of the root node is 0.
+The problem passed the necessary load-based feasibility test.
+The problem passed the necessary interval-based feasibility test.
+Since the rating of the root node is 0, I will need to create a safe job ordering from scratch, which may take seconds or centuries...
+You should press Control + C if you run out of patience!
+ failed after 45 / 2661 jobs
+ failed after 84 / 2661 jobs
+ failed after 86 / 2661 jobs
+ failed after 117 / 2661 jobs
+ failed after 143 / 2661 jobs
+ failed after 185 / 2661 jobs
+ failed after 205 / 2661 jobs
+ failed after 207 / 2661 jobs
+ failed after 382 / 2661 jobs
+ failed after 384 / 2661 jobs
+ failed after 389 / 2661 jobs
+ failed after 428 / 2661 jobs
+ failed after 431 / 2661 jobs
+ failed after 532 / 2661 jobs
+ failed after 581 / 2661 jobs
+ failed after 589 / 2661 jobs
+ failed after 600 / 2661 jobs
+ failed after 605 / 2661 jobs
+ failed after 620 / 2661 jobs
+ failed after 671 / 2661 jobs
+ failed after 874 / 2661 jobs
+ failed after 894 / 2661 jobs
+ failed after 910 / 2661 jobs
+ failed after 915 / 2661 jobs
+ failed after 1256 / 2661 jobs
+ failed after 1296 / 2661 jobs
+ failed after 1703 / 2661 jobs
+ failed after 1727 / 2661 jobs
+ failed after 1753 / 2661 jobs
+ failed after 2072 / 2661 jobs
+ failed after 2123 / 2661 jobs
+ failed after 2215 / 2661 jobs
+ failed after 2238 / 2661 jobs
+ failed after 2248 / 2661 jobs
+ failed after 2257 / 2661 jobs
+ failed after 2290 / 2661 jobs
+ failed after 2323 / 2661 jobs
+ failed after 2464 / 2661 jobs
+ failed after 2473 / 2661 jobs
+ failed after 2498 / 2661 jobs
+ failed after 2504 / 2661 jobs
+ failed after 2509 / 2661 jobs
+ failed after 2521 / 2661 jobs
+ failed after 2525 / 2661 jobs
+ failed after 2545 / 2661 jobs
+ failed after 2552 / 2661 jobs
+ failed after 2601 / 2661 jobs
+I found a safe job ordering!
+Time to make cuts...
+ increased #extra constraints to 39
+ increased #extra constraints to 59
+ increased #extra constraints to 60
+ increased #extra constraints to 92
+ increased #extra constraints to 94
+ increased #extra constraints to 114
+ increased #extra constraints to 151
+ increased #extra constraints to 224

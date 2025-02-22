@@ -1,0 +1,53 @@
+The given problem seems to be unschedulable using our scheduler, and the rating of the root node is 0.
+The problem passed the necessary load-based feasibility test.
+The problem passed the necessary interval-based feasibility test.
+Since the rating of the root node is 0, I will need to create a safe job ordering from scratch, which may take seconds or centuries...
+You should press Control + C if you run out of patience!
+ failed after 49 / 2673 jobs
+ failed after 207 / 2673 jobs
+ failed after 312 / 2673 jobs
+ failed after 336 / 2673 jobs
+ failed after 364 / 2673 jobs
+ failed after 380 / 2673 jobs
+ failed after 505 / 2673 jobs
+ failed after 540 / 2673 jobs
+ failed after 549 / 2673 jobs
+ failed after 770 / 2673 jobs
+ failed after 1003 / 2673 jobs
+ failed after 1016 / 2673 jobs
+ failed after 1049 / 2673 jobs
+ failed after 1068 / 2673 jobs
+ failed after 1167 / 2673 jobs
+ failed after 1204 / 2673 jobs
+ failed after 1245 / 2673 jobs
+ failed after 1263 / 2673 jobs
+ failed after 1520 / 2673 jobs
+ failed after 1686 / 2673 jobs
+ failed after 1690 / 2673 jobs
+ failed after 1742 / 2673 jobs
+ failed after 1768 / 2673 jobs
+ failed after 1842 / 2673 jobs
+ failed after 1898 / 2673 jobs
+ failed after 1937 / 2673 jobs
+ failed after 2255 / 2673 jobs
+ failed after 2406 / 2673 jobs
+ failed after 2612 / 2673 jobs
+I found a safe job ordering!
+Time to make cuts...
+ increased #extra constraints to 30
+ increased #extra constraints to 39
+ increased #extra constraints to 40
+ increased #extra constraints to 46
+ increased #extra constraints to 50
+ increased #extra constraints to 52
+ increased #extra constraints to 61
+ increased #extra constraints to 74
+ increased #extra constraints to 75
+ increased #extra constraints to 83
+ increased #extra constraints to 94
+ increased #extra constraints to 98
+ increased #extra constraints to 119
+ increased #extra constraints to 122
+ increased #extra constraints to 128
+ increased #extra constraints to 148
+ increased #extra constraints to 150

@@ -1,0 +1,6 @@
+exit-code: 0
+root-rating: 0.004
+root-safe: true
+feasible: true
+num-extra-constraints: 5
+spent-millis: 9482

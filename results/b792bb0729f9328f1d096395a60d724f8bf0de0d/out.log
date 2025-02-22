@@ -1,0 +1,15 @@
+The given problem seems to be unschedulable using our scheduler, and the rating of the root node is 0.008.
+The problem passed the necessary load-based feasibility test.
+The problem passed the necessary interval-based feasibility test.
+Since the root node is unsafe, I will need to create a safe job ordering from scratch, which may take seconds or centuries...
+You should press Control + C if you run out of patience!
+I found a safe job ordering!
+Time to make cuts...
+ increased #extra constraints to 28
+ increased #extra constraints to 31
+ increased #extra constraints to 47
+ increased #extra constraints to 59
+ increased #extra constraints to 60
+ increased #extra constraints to 63
+ increased #extra constraints to 114
+ increased #extra constraints to 115

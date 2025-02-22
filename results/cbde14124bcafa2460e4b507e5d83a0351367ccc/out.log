@@ -1,0 +1,80 @@
+The given problem seems to be unschedulable using our scheduler, and the rating of the root node is 0.004.
+The problem passed the necessary load-based feasibility test.
+The problem passed the necessary interval-based feasibility test.
+Since the root node is unsafe, I will need to create a safe job ordering from scratch, which may take seconds or centuries...
+You should press Control + C if you run out of patience!
+I found a safe job ordering!
+Time to make cuts...
+ increased #extra constraints to 16
+ increased #extra constraints to 21
+ increased #extra constraints to 34
+ increased #extra constraints to 36
+ increased #extra constraints to 45
+ increased #extra constraints to 46
+ increased #extra constraints to 57
+ increased #extra constraints to 60
+60 dispatch ordering constraints were added, let's try to minimize that...
+60 remain after transitivity analysis; let's minimize further using tail trial-and-error...
+ reduced #extra constraints to 59
+ reduced #extra constraints to 58
+ reduced #extra constraints to 57
+ reduced #extra constraints to 56
+ reduced #extra constraints to 55
+ reduced #extra constraints to 54
+ reduced #extra constraints to 53
+ reduced #extra constraints to 52
+ reduced #extra constraints to 51
+ reduced #extra constraints to 50
+ reduced #extra constraints to 49
+ reduced #extra constraints to 48
+ reduced #extra constraints to 47
+ reduced #extra constraints to 46
+ reduced #extra constraints to 45
+ reduced #extra constraints to 44
+ reduced #extra constraints to 43
+ reduced #extra constraints to 42
+ reduced #extra constraints to 41
+ reduced #extra constraints to 40
+ reduced #extra constraints to 39
+ reduced #extra constraints to 38
+ reduced #extra constraints to 37
+ reduced #extra constraints to 36
+ reduced #extra constraints to 35
+ reduced #extra constraints to 34
+ reduced #extra constraints to 33
+ reduced #extra constraints to 32
+ reduced #extra constraints to 31
+ reduced #extra constraints to 30
+ reduced #extra constraints to 29
+ reduced #extra constraints to 28
+ reduced #extra constraints to 27
+ reduced #extra constraints to 26
+ reduced #extra constraints to 25
+ reduced #extra constraints to 24
+ reduced #extra constraints to 23
+ reduced #extra constraints to 22
+ reduced #extra constraints to 21
+ reduced #extra constraints to 20
+ reduced #extra constraints to 19
+ reduced #extra constraints to 18
+ reduced #extra constraints to 17
+ reduced #extra constraints to 16
+ reduced #extra constraints to 15
+ reduced #extra constraints to 14
+ reduced #extra constraints to 13
+ reduced #extra constraints to 12
+ reduced #extra constraints to 11
+11 remain after trial & error.
+The given problem seems to be unschedulable (using our scheduler), but you can make it certainly schedulable by adding all the following dispatch ordering constraints:
+ - ensure that T1J7 must be dispatched before T20J88
+ - ensure that T20J89 must be dispatched before T31J105
+ - ensure that T29J103 must be dispatched before T22J93
+ - ensure that T22J92 must be dispatched before T26J100
+ - ensure that T19J87 must be dispatched before T11J68
+ - ensure that T1J8 must be dispatched before T11J67
+ - ensure that T7J46 must be dispatched before T5J34
+ - ensure that T5J34 must be dispatched before T17J83
+ - ensure that T4J26 must be dispatched before T16J80
+ - ensure that T16J80 must be dispatched before T1J8
+ - ensure that T21J90 must be dispatched before T2J14
+Reconfiguration took 16.1473 seconds (15.8067 CPU seconds) and consumed 67MB of memory

@@ -1,0 +1,69 @@
+The given problem seems to be unschedulable using our scheduler, and the rating of the root node is 0.
+The problem passed the necessary load-based feasibility test.
+The problem passed the necessary interval-based feasibility test.
+Since the rating of the root node is 0, I will need to create a safe job ordering from scratch, which may take seconds or centuries...
+You should press Control + C if you run out of patience!
+ failed after 70 / 1358 jobs
+ failed after 230 / 1358 jobs
+ failed after 250 / 1358 jobs
+ failed after 266 / 1358 jobs
+ failed after 310 / 1358 jobs
+ failed after 354 / 1358 jobs
+ failed after 390 / 1358 jobs
+ failed after 435 / 1358 jobs
+ failed after 523 / 1358 jobs
+ failed after 576 / 1358 jobs
+ failed after 617 / 1358 jobs
+ failed after 618 / 1358 jobs
+ failed after 620 / 1358 jobs
+ failed after 653 / 1358 jobs
+ failed after 669 / 1358 jobs
+ failed after 695 / 1358 jobs
+ failed after 704 / 1358 jobs
+ failed after 770 / 1358 jobs
+ failed after 812 / 1358 jobs
+ failed after 842 / 1358 jobs
+ failed after 929 / 1358 jobs
+ failed after 972 / 1358 jobs
+ failed after 1055 / 1358 jobs
+ failed after 1057 / 1358 jobs
+ failed after 1070 / 1358 jobs
+ failed after 1080 / 1358 jobs
+ failed after 1120 / 1358 jobs
+ failed after 1315 / 1358 jobs
+ failed after 1350 / 1358 jobs
+I found a safe job ordering!
+Time to make cuts...
+ increased #extra constraints to 17
+ increased #extra constraints to 25
+ increased #extra constraints to 26
+ increased #extra constraints to 32
+ increased #extra constraints to 37
+ increased #extra constraints to 47
+ increased #extra constraints to 48
+ increased #extra constraints to 49
+ increased #extra constraints to 58
+ increased #extra constraints to 71
+ increased #extra constraints to 86
+ increased #extra constraints to 91
+ increased #extra constraints to 96
+ increased #extra constraints to 101
+ increased #extra constraints to 102
+ increased #extra constraints to 108
+ increased #extra constraints to 121
+ increased #extra constraints to 128
+ increased #extra constraints to 134
+ increased #extra constraints to 142
+ increased #extra constraints to 158
+ increased #extra constraints to 161
+ increased #extra constraints to 172
+ increased #extra constraints to 185
+ increased #extra constraints to 192
+ increased #extra constraints to 200
+ increased #extra constraints to 203
+ increased #extra constraints to 232
+ increased #extra constraints to 233
+ increased #extra constraints to 240
+ increased #extra constraints to 248
+ increased #extra constraints to 256
+ increased #extra constraints to 265

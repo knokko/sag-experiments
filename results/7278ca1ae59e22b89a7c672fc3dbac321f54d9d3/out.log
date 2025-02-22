@@ -1,0 +1,55 @@
+The given problem seems to be unschedulable using our scheduler, and the rating of the root node is 0.
+The problem passed the necessary load-based feasibility test.
+The problem passed the necessary interval-based feasibility test.
+Since the rating of the root node is 0, I will need to create a safe job ordering from scratch, which may take seconds or centuries...
+You should press Control + C if you run out of patience!
+ failed after 63 / 7716 jobs
+ failed after 64 / 7716 jobs
+ failed after 86 / 7716 jobs
+ failed after 87 / 7716 jobs
+ failed after 105 / 7716 jobs
+ failed after 159 / 7716 jobs
+ failed after 166 / 7716 jobs
+ failed after 182 / 7716 jobs
+ failed after 183 / 7716 jobs
+ failed after 188 / 7716 jobs
+ failed after 207 / 7716 jobs
+ failed after 208 / 7716 jobs
+ failed after 209 / 7716 jobs
+ failed after 218 / 7716 jobs
+ failed after 233 / 7716 jobs
+ failed after 268 / 7716 jobs
+ failed after 295 / 7716 jobs
+ failed after 302 / 7716 jobs
+ failed after 307 / 7716 jobs
+ failed after 335 / 7716 jobs
+ failed after 336 / 7716 jobs
+ failed after 358 / 7716 jobs
+ failed after 364 / 7716 jobs
+ failed after 365 / 7716 jobs
+ failed after 374 / 7716 jobs
+ failed after 392 / 7716 jobs
+ failed after 403 / 7716 jobs
+ failed after 404 / 7716 jobs
+ failed after 477 / 7716 jobs
+ failed after 479 / 7716 jobs
+ failed after 510 / 7716 jobs
+ failed after 522 / 7716 jobs
+ failed after 574 / 7716 jobs
+ failed after 603 / 7716 jobs
+ failed after 629 / 7716 jobs
+ failed after 636 / 7716 jobs
+ failed after 651 / 7716 jobs
+ failed after 658 / 7716 jobs
+ failed after 659 / 7716 jobs
+ failed after 695 / 7716 jobs
+ failed after 728 / 7716 jobs
+ failed after 745 / 7716 jobs
+ failed after 819 / 7716 jobs
+ failed after 821 / 7716 jobs
+ failed after 823 / 7716 jobs
+ failed after 827 / 7716 jobs
+ failed after 850 / 7716 jobs
+ failed after 851 / 7716 jobs
+ failed after 852 / 7716 jobs
+ failed after 853 / 7716 jobs

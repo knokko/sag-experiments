@@ -1,0 +1,80 @@
+The given problem seems to be unschedulable using our scheduler, and the rating of the root node is 0.
+The problem passed the necessary load-based feasibility test.
+The problem passed the necessary interval-based feasibility test.
+Since the rating of the root node is 0, I will need to create a safe job ordering from scratch, which may take seconds or centuries...
+You should press Control + C if you run out of patience!
+ failed after 34 / 3924 jobs
+ failed after 72 / 3924 jobs
+ failed after 104 / 3924 jobs
+ failed after 168 / 3924 jobs
+ failed after 298 / 3924 jobs
+ failed after 309 / 3924 jobs
+ failed after 310 / 3924 jobs
+ failed after 320 / 3924 jobs
+ failed after 444 / 3924 jobs
+ failed after 446 / 3924 jobs
+ failed after 680 / 3924 jobs
+ failed after 722 / 3924 jobs
+ failed after 768 / 3924 jobs
+ failed after 814 / 3924 jobs
+ failed after 836 / 3924 jobs
+ failed after 866 / 3924 jobs
+ failed after 925 / 3924 jobs
+ failed after 1047 / 3924 jobs
+ failed after 1051 / 3924 jobs
+ failed after 1156 / 3924 jobs
+ failed after 1175 / 3924 jobs
+ failed after 1232 / 3924 jobs
+ failed after 1282 / 3924 jobs
+ failed after 1350 / 3924 jobs
+ failed after 1481 / 3924 jobs
+ failed after 1526 / 3924 jobs
+ failed after 1533 / 3924 jobs
+ failed after 1640 / 3924 jobs
+ failed after 1685 / 3924 jobs
+ failed after 1816 / 3924 jobs
+ failed after 1887 / 3924 jobs
+ failed after 2000 / 3924 jobs
+ failed after 2014 / 3924 jobs
+ failed after 2080 / 3924 jobs
+ failed after 2083 / 3924 jobs
+ failed after 2179 / 3924 jobs
+ failed after 2186 / 3924 jobs
+ failed after 2275 / 3924 jobs
+ failed after 2278 / 3924 jobs
+ failed after 2283 / 3924 jobs
+ failed after 2421 / 3924 jobs
+ failed after 2443 / 3924 jobs
+ failed after 2529 / 3924 jobs
+ failed after 2564 / 3924 jobs
+ failed after 2583 / 3924 jobs
+ failed after 2605 / 3924 jobs
+ failed after 2649 / 3924 jobs
+ failed after 2654 / 3924 jobs
+ failed after 2662 / 3924 jobs
+ failed after 2710 / 3924 jobs
+ failed after 2723 / 3924 jobs
+ failed after 2900 / 3924 jobs
+ failed after 2901 / 3924 jobs
+ failed after 2924 / 3924 jobs
+ failed after 2984 / 3924 jobs
+ failed after 2990 / 3924 jobs
+ failed after 3006 / 3924 jobs
+ failed after 3086 / 3924 jobs
+ failed after 3087 / 3924 jobs
+ failed after 3171 / 3924 jobs
+ failed after 3207 / 3924 jobs
+ failed after 3295 / 3924 jobs
+ failed after 3298 / 3924 jobs
+ failed after 3299 / 3924 jobs
+ failed after 3442 / 3924 jobs
+ failed after 3474 / 3924 jobs
+ failed after 3552 / 3924 jobs
+ failed after 3616 / 3924 jobs
+ failed after 3651 / 3924 jobs
+ failed after 3797 / 3924 jobs
+ failed after 3800 / 3924 jobs
+ failed after 3816 / 3924 jobs
+ failed after 3865 / 3924 jobs
+I found a safe job ordering!
+Time to make cuts...

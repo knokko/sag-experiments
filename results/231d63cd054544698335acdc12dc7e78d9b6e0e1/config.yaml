@@ -1,0 +1,28 @@
+path: "/tmp/1314702863807128588"
+output_format: csv
+number_of_cores: 4
+utilization_distribution: "uunifast"
+period_distribution: "uniform-discrete"
+period_range: [1000, 10000]
+periods: [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
+num_sets: 1
+tasks: 4
+utilization: 3.5
+exec_variation: 0.1
+jitter: 0.1
+constant_jitter: false
+max_jobs: 1000
+mapping_heuristic: 0
+generate_dags: true
+generate_dot: false
+dag_type: "fork-join"
+fork_probability: 0.5
+edge_probability: 0.5
+max_branches: 3
+max_vertices: 10
+num_roots: 1
+max_depth: 3
+generate_job_sets: true
+priority_assignment: "RM"
+run_parallel: true
+verbose: 0

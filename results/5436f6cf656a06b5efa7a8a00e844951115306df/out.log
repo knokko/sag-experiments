@@ -1,0 +1,173 @@
+The given problem seems to be unschedulable using our scheduler, and the rating of the root node is 0.
+The problem passed the necessary load-based feasibility test.
+The problem passed the necessary interval-based feasibility test.
+Since the rating of the root node is 0, I will need to create a safe job ordering from scratch, which may take seconds or centuries...
+You should press Control + C if you run out of patience!
+ failed after 133 / 5187 jobs
+ failed after 415 / 5187 jobs
+ failed after 669 / 5187 jobs
+ failed after 670 / 5187 jobs
+ failed after 938 / 5187 jobs
+ failed after 1254 / 5187 jobs
+ failed after 1278 / 5187 jobs
+ failed after 1330 / 5187 jobs
+ failed after 1338 / 5187 jobs
+ failed after 1506 / 5187 jobs
+ failed after 1554 / 5187 jobs
+ failed after 1661 / 5187 jobs
+ failed after 1753 / 5187 jobs
+ failed after 1783 / 5187 jobs
+ failed after 1859 / 5187 jobs
+ failed after 1941 / 5187 jobs
+ failed after 2036 / 5187 jobs
+ failed after 2183 / 5187 jobs
+ failed after 2471 / 5187 jobs
+ failed after 2480 / 5187 jobs
+ failed after 2546 / 5187 jobs
+ failed after 2549 / 5187 jobs
+ failed after 2712 / 5187 jobs
+ failed after 2719 / 5187 jobs
+ failed after 2807 / 5187 jobs
+ failed after 2911 / 5187 jobs
+ failed after 3060 / 5187 jobs
+ failed after 3080 / 5187 jobs
+ failed after 3233 / 5187 jobs
+ failed after 3329 / 5187 jobs
+ failed after 3431 / 5187 jobs
+ failed after 3583 / 5187 jobs
+ failed after 3693 / 5187 jobs
+ failed after 3829 / 5187 jobs
+ failed after 3858 / 5187 jobs
+ failed after 3922 / 5187 jobs
+ failed after 4000 / 5187 jobs
+ failed after 4011 / 5187 jobs
+ failed after 4087 / 5187 jobs
+ failed after 4301 / 5187 jobs
+ failed after 4441 / 5187 jobs
+ failed after 4531 / 5187 jobs
+ failed after 4556 / 5187 jobs
+ failed after 4558 / 5187 jobs
+ failed after 4778 / 5187 jobs
+ failed after 4989 / 5187 jobs
+ failed after 5063 / 5187 jobs
+ failed after 5169 / 5187 jobs
+ failed after 5171 / 5187 jobs
+I found a safe job ordering!
+Time to make cuts...
+ increased #extra constraints to 16
+ increased #extra constraints to 25
+ increased #extra constraints to 42
+ increased #extra constraints to 76
+ increased #extra constraints to 78
+ increased #extra constraints to 122
+ increased #extra constraints to 135
+ increased #extra constraints to 145
+ increased #extra constraints to 147
+ increased #extra constraints to 180
+ increased #extra constraints to 192
+ increased #extra constraints to 202
+ increased #extra constraints to 221
+ increased #extra constraints to 231
+ increased #extra constraints to 255
+ increased #extra constraints to 288
+ increased #extra constraints to 305
+ increased #extra constraints to 316
+ increased #extra constraints to 330
+ increased #extra constraints to 350
+ increased #extra constraints to 354
+ increased #extra constraints to 386
+ increased #extra constraints to 427
+ increased #extra constraints to 436
+ increased #extra constraints to 471
+ increased #extra constraints to 475
+ increased #extra constraints to 484
+ increased #extra constraints to 531
+ increased #extra constraints to 536
+ increased #extra constraints to 548
+ increased #extra constraints to 552
+ increased #extra constraints to 553
+ increased #extra constraints to 575
+ increased #extra constraints to 584
+ increased #extra constraints to 593
+ increased #extra constraints to 597
+ increased #extra constraints to 626
+ increased #extra constraints to 637
+ increased #extra constraints to 656
+ increased #extra constraints to 675
+ increased #extra constraints to 681
+ increased #extra constraints to 710
+ increased #extra constraints to 732
+ increased #extra constraints to 753
+ increased #extra constraints to 771
+ increased #extra constraints to 783
+ increased #extra constraints to 790
+ increased #extra constraints to 798
+ increased #extra constraints to 826
+ increased #extra constraints to 832
+ increased #extra constraints to 842
+ increased #extra constraints to 851
+ increased #extra constraints to 876
+ increased #extra constraints to 881
+ increased #extra constraints to 907
+ increased #extra constraints to 917
+ increased #extra constraints to 930
+ increased #extra constraints to 954
+ increased #extra constraints to 962
+ increased #extra constraints to 980
+ increased #extra constraints to 1000
+ increased #extra constraints to 1004
+ increased #extra constraints to 1012
+ increased #extra constraints to 1031
+ increased #extra constraints to 1058
+ increased #extra constraints to 1076
+ increased #extra constraints to 1095
+ increased #extra constraints to 1096
+ increased #extra constraints to 1103
+ increased #extra constraints to 1114
+ increased #extra constraints to 1116
+ increased #extra constraints to 1140
+ increased #extra constraints to 1148
+ increased #extra constraints to 1150
+ increased #extra constraints to 1160
+ increased #extra constraints to 1185
+ increased #extra constraints to 1191
+ increased #extra constraints to 1211
+ increased #extra constraints to 1226
+ increased #extra constraints to 1233
+ increased #extra constraints to 1243
+ increased #extra constraints to 1265
+ increased #extra constraints to 1272
+ increased #extra constraints to 1276
+ increased #extra constraints to 1291
+ increased #extra constraints to 1308
+ increased #extra constraints to 1310
+ increased #extra constraints to 1325
+ increased #extra constraints to 1333
+ increased #extra constraints to 1347
+ increased #extra constraints to 1377
+ increased #extra constraints to 1388
+ increased #extra constraints to 1395
+ increased #extra constraints to 1404
+ increased #extra constraints to 1415
+ increased #extra constraints to 1429
+ increased #extra constraints to 1437
+ increased #extra constraints to 1446
+ increased #extra constraints to 1455
+ increased #extra constraints to 1472
+ increased #extra constraints to 1475
+ increased #extra constraints to 1509
+ increased #extra constraints to 1534
+ increased #extra constraints to 1557
+ increased #extra constraints to 1577
+ increased #extra constraints to 1589
+ increased #extra constraints to 1596
+ increased #extra constraints to 1617
+ increased #extra constraints to 1630
+ increased #extra constraints to 1640
+ increased #extra constraints to 1650
+ increased #extra constraints to 1667
+ increased #extra constraints to 1675
+ increased #extra constraints to 1679
+ increased #extra constraints to 1696
+ increased #extra constraints to 1697
+ increased #extra constraints to 1713

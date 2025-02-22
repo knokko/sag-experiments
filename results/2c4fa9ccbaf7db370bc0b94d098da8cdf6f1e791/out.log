@@ -1,0 +1,41 @@
+The given problem seems to be unschedulable using our scheduler, and the rating of the root node is 0.
+The problem passed the necessary load-based feasibility test.
+The problem passed the necessary interval-based feasibility test.
+Since the rating of the root node is 0, I will need to create a safe job ordering from scratch, which may take seconds or centuries...
+You should press Control + C if you run out of patience!
+ failed after 79 / 2442 jobs
+ failed after 277 / 2442 jobs
+ failed after 406 / 2442 jobs
+ failed after 433 / 2442 jobs
+ failed after 500 / 2442 jobs
+ failed after 652 / 2442 jobs
+ failed after 711 / 2442 jobs
+ failed after 838 / 2442 jobs
+ failed after 976 / 2442 jobs
+ failed after 1072 / 2442 jobs
+ failed after 1089 / 2442 jobs
+ failed after 1104 / 2442 jobs
+ failed after 1255 / 2442 jobs
+ failed after 1290 / 2442 jobs
+ failed after 1296 / 2442 jobs
+ failed after 1379 / 2442 jobs
+ failed after 1510 / 2442 jobs
+ failed after 1540 / 2442 jobs
+ failed after 1651 / 2442 jobs
+ failed after 1760 / 2442 jobs
+ failed after 1852 / 2442 jobs
+ failed after 1900 / 2442 jobs
+ failed after 1916 / 2442 jobs
+ failed after 1996 / 2442 jobs
+ failed after 2000 / 2442 jobs
+ failed after 2022 / 2442 jobs
+ failed after 2025 / 2442 jobs
+ failed after 2134 / 2442 jobs
+ failed after 2336 / 2442 jobs
+I found a safe job ordering!
+Time to make cuts...
+ increased #extra constraints to 25
+ increased #extra constraints to 29
+ increased #extra constraints to 31
+ increased #extra constraints to 38
+ increased #extra constraints to 43

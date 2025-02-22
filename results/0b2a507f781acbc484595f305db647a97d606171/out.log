@@ -1,0 +1,200 @@
+The given problem seems to be unschedulable using our scheduler, and the rating of the root node is 0.008.
+The problem passed the necessary load-based feasibility test.
+The problem passed the necessary interval-based feasibility test.
+Since the root node is unsafe, I will need to create a safe job ordering from scratch, which may take seconds or centuries...
+You should press Control + C if you run out of patience!
+I found a safe job ordering!
+Time to make cuts...
+ increased #extra constraints to 31
+ increased #extra constraints to 40
+ increased #extra constraints to 46
+ increased #extra constraints to 71
+ increased #extra constraints to 152
+ increased #extra constraints to 166
+ increased #extra constraints to 178
+ increased #extra constraints to 180
+180 dispatch ordering constraints were added, let's try to minimize that...
+180 remain after transitivity analysis; let's minimize further using tail trial-and-error...
+ reduced #extra constraints to 179
+ reduced #extra constraints to 178
+ reduced #extra constraints to 177
+ reduced #extra constraints to 176
+ reduced #extra constraints to 175
+ reduced #extra constraints to 174
+ reduced #extra constraints to 173
+ reduced #extra constraints to 172
+ reduced #extra constraints to 171
+ reduced #extra constraints to 170
+ reduced #extra constraints to 169
+ reduced #extra constraints to 168
+ reduced #extra constraints to 167
+ reduced #extra constraints to 166
+ reduced #extra constraints to 165
+ reduced #extra constraints to 164
+ reduced #extra constraints to 163
+ reduced #extra constraints to 162
+ reduced #extra constraints to 161
+ reduced #extra constraints to 160
+ reduced #extra constraints to 159
+ reduced #extra constraints to 158
+ reduced #extra constraints to 157
+ reduced #extra constraints to 156
+ reduced #extra constraints to 155
+ reduced #extra constraints to 154
+ reduced #extra constraints to 153
+ reduced #extra constraints to 152
+ reduced #extra constraints to 151
+ reduced #extra constraints to 150
+ reduced #extra constraints to 149
+ reduced #extra constraints to 148
+ reduced #extra constraints to 147
+ reduced #extra constraints to 146
+ reduced #extra constraints to 145
+ reduced #extra constraints to 144
+ reduced #extra constraints to 143
+ reduced #extra constraints to 142
+ reduced #extra constraints to 141
+ reduced #extra constraints to 140
+ reduced #extra constraints to 139
+ reduced #extra constraints to 138
+ reduced #extra constraints to 137
+ reduced #extra constraints to 136
+ reduced #extra constraints to 135
+ reduced #extra constraints to 134
+ reduced #extra constraints to 133
+ reduced #extra constraints to 132
+ reduced #extra constraints to 131
+ reduced #extra constraints to 130
+ reduced #extra constraints to 129
+ reduced #extra constraints to 128
+ reduced #extra constraints to 127
+ reduced #extra constraints to 126
+ reduced #extra constraints to 125
+ reduced #extra constraints to 124
+ reduced #extra constraints to 123
+ reduced #extra constraints to 122
+ reduced #extra constraints to 121
+ reduced #extra constraints to 120
+ reduced #extra constraints to 119
+ reduced #extra constraints to 118
+ reduced #extra constraints to 117
+ reduced #extra constraints to 116
+ reduced #extra constraints to 115
+ reduced #extra constraints to 114
+ reduced #extra constraints to 113
+ reduced #extra constraints to 112
+ reduced #extra constraints to 111
+ reduced #extra constraints to 110
+ reduced #extra constraints to 109
+ reduced #extra constraints to 108
+ reduced #extra constraints to 107
+ reduced #extra constraints to 106
+ reduced #extra constraints to 105
+ reduced #extra constraints to 104
+ reduced #extra constraints to 103
+ reduced #extra constraints to 102
+ reduced #extra constraints to 101
+ reduced #extra constraints to 100
+ reduced #extra constraints to 99
+ reduced #extra constraints to 98
+ reduced #extra constraints to 97
+ reduced #extra constraints to 96
+ reduced #extra constraints to 95
+ reduced #extra constraints to 94
+ reduced #extra constraints to 93
+ reduced #extra constraints to 92
+ reduced #extra constraints to 91
+ reduced #extra constraints to 90
+ reduced #extra constraints to 89
+ reduced #extra constraints to 88
+ reduced #extra constraints to 87
+ reduced #extra constraints to 86
+ reduced #extra constraints to 85
+ reduced #extra constraints to 84
+ reduced #extra constraints to 83
+83 remain after trial & error.
+The given problem seems to be unschedulable (using our scheduler), but you can make it certainly schedulable by adding all the following dispatch ordering constraints:
+ - ensure that T7J49 must be dispatched before T1J7
+ - ensure that T14J98 must be dispatched before T2J14
+ - ensure that T26J171 must be dispatched before T3J21
+ - ensure that T29J189 must be dispatched before T4J28
+ - ensure that T24J164 must be dispatched before T9J69
+ - ensure that T17J117 must be dispatched before T6J42
+ - ensure that T30J198 must be dispatched before T6J46
+ - ensure that T28J183 must be dispatched before T8J56
+ - ensure that T24J163 must be dispatched before T6J47
+ - ensure that T24J159 must be dispatched before T10J70
+ - ensure that T13J91 must be dispatched before T11J77
+ - ensure that T22J147 must be dispatched before T12J84
+ - ensure that T25J165 must be dispatched before T13J91
+ - ensure that T6J42 must be dispatched before T14J98
+ - ensure that T7J51 must be dispatched before T27J179
+ - ensure that T18J126 must be dispatched before T4J32
+ - ensure that T5J35 must be dispatched before T18J123
+ - ensure that T2J17 must be dispatched before T8J59
+ - ensure that T8J61 must be dispatched before T33J217
+ - ensure that T8J59 must be dispatched before T9J66
+ - ensure that T31J205 must be dispatched before T4J33
+ - ensure that T19J129 must be dispatched before T23J153
+ - ensure that T26J176 must be dispatched before T31J206
+ - ensure that T31J201 must be dispatched before T25J165
+ - ensure that T16J116 must be dispatched before T32J212
+ - ensure that T2J14 must be dispatched before T28J183
+ - ensure that T0J0 must be dispatched before T29J189
+ - ensure that T16J111 must be dispatched before T30J195
+ - ensure that T3J23 must be dispatched before T29J191
+ - ensure that T18J128 must be dispatched before T13J97
+ - ensure that T21J146 must be dispatched before T26J176
+ - ensure that T14J99 must be dispatched before T2J15
+ - ensure that T12J85 must be dispatched before T3J22
+ - ensure that T0J1 must be dispatched before T4J29
+ - ensure that T29J190 must be dispatched before T8J57
+ - ensure that T16J113 must be dispatched before T30J197
+ - ensure that T17J118 must be dispatched before T13J92
+ - ensure that T14J104 must be dispatched before T2J20
+ - ensure that T8J57 must be dispatched before T15J106
+ - ensure that T2J15 must be dispatched before T29J190
+ - ensure that T13J92 must be dispatched before T11J78
+ - ensure that T3J22 must be dispatched before T17J118
+ - ensure that T3J25 must be dispatched before T13J95
+ - ensure that T26J172 must be dispatched before T31J202
+ - ensure that T20J136 must be dispatched before T32J208
+ - ensure that T25J166 must be dispatched before T33J214
+ - ensure that T20J140 must be dispatched before T3J27
+ - ensure that T28J188 must be dispatched before T4J34
+ - ensure that T27J179 must be dispatched before T1J9
+ - ensure that T14J100 must be dispatched before T2J16
+ - ensure that T12J86 must be dispatched before T3J23
+ - ensure that T0J2 must be dispatched before T4J30
+ - ensure that T31J202 must be dispatched before T5J36
+ - ensure that T0J5 must be dispatched before T31J205
+ - ensure that T2J16 must be dispatched before T8J58
+ - ensure that T8J58 must be dispatched before T9J65
+ - ensure that T28J185 must be dispatched before T5J37
+ - ensure that T13J93 must be dispatched before T10J72
+ - ensure that T28J184 must be dispatched before T12J85
+ - ensure that T10J72 must be dispatched before T15J107
+ - ensure that T29J191 must be dispatched before T13J93
+ - ensure that T6J44 must be dispatched before T14J100
+ - ensure that T29J192 must be dispatched before T15J108
+ - ensure that T29J193 must be dispatched before T15J109
+ - ensure that T4J34 must be dispatched before T19J134
+ - ensure that T5J37 must be dispatched before T17J119
+ - ensure that T28J186 must be dispatched before T17J120
+ - ensure that T31J206 must be dispatched before T25J170
+ - ensure that T5J36 must be dispatched before T25J166
+ - ensure that T33J217 must be dispatched before T32J211
+ - ensure that T0J4 must be dispatched before T18J126
+ - ensure that T30J197 must be dispatched before T0J3
+ - ensure that T23J155 must be dispatched before T19J131
+ - ensure that T23J156 must be dispatched before T19J132
+ - ensure that T0J6 must be dispatched before T28J188
+ - ensure that T7J53 must be dispatched before T1J11
+ - ensure that T14J101 must be dispatched before T2J17
+ - ensure that T14J102 must be dispatched before T2J18
+ - ensure that T14J103 must be dispatched before T2J19
+ - ensure that T12J87 must be dispatched before T3J24
+ - ensure that T12J88 must be dispatched before T3J25
+ - ensure that T12J89 must be dispatched before T3J26
+ - ensure that T0J3 must be dispatched before T4J31
+Reconfiguration took 32.0756 seconds (31.6914 CPU seconds) and consumed 57MB of memory

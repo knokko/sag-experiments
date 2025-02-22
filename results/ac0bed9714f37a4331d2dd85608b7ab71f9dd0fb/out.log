@@ -1,0 +1,64 @@
+The given problem seems to be unschedulable using our scheduler, and the rating of the root node is 0.004.
+The problem passed the necessary load-based feasibility test.
+The problem passed the necessary interval-based feasibility test.
+Since the root node is unsafe, I will need to create a safe job ordering from scratch, which may take seconds or centuries...
+You should press Control + C if you run out of patience!
+ failed after 21 / 452 jobs
+ failed after 36 / 452 jobs
+ failed after 37 / 452 jobs
+ failed after 57 / 452 jobs
+ failed after 67 / 452 jobs
+ failed after 68 / 452 jobs
+ failed after 71 / 452 jobs
+ failed after 72 / 452 jobs
+ failed after 73 / 452 jobs
+ failed after 83 / 452 jobs
+ failed after 84 / 452 jobs
+ failed after 125 / 452 jobs
+ failed after 126 / 452 jobs
+ failed after 129 / 452 jobs
+ failed after 140 / 452 jobs
+ failed after 145 / 452 jobs
+ failed after 147 / 452 jobs
+ failed after 158 / 452 jobs
+ failed after 159 / 452 jobs
+ failed after 160 / 452 jobs
+ failed after 162 / 452 jobs
+ failed after 163 / 452 jobs
+ failed after 166 / 452 jobs
+ failed after 171 / 452 jobs
+ failed after 174 / 452 jobs
+ failed after 186 / 452 jobs
+ failed after 206 / 452 jobs
+ failed after 207 / 452 jobs
+ failed after 210 / 452 jobs
+ failed after 212 / 452 jobs
+ failed after 230 / 452 jobs
+ failed after 247 / 452 jobs
+ failed after 260 / 452 jobs
+ failed after 261 / 452 jobs
+ failed after 262 / 452 jobs
+ failed after 263 / 452 jobs
+ failed after 298 / 452 jobs
+ failed after 299 / 452 jobs
+ failed after 314 / 452 jobs
+ failed after 324 / 452 jobs
+ failed after 327 / 452 jobs
+ failed after 338 / 452 jobs
+ failed after 340 / 452 jobs
+ failed after 341 / 452 jobs
+ failed after 350 / 452 jobs
+ failed after 353 / 452 jobs
+ failed after 354 / 452 jobs
+ failed after 359 / 452 jobs
+ failed after 426 / 452 jobs
+ failed after 427 / 452 jobs
+ failed after 428 / 452 jobs
+ failed after 430 / 452 jobs
+ failed after 431 / 452 jobs
+ failed after 432 / 452 jobs
+ failed after 433 / 452 jobs
+ failed after 434 / 452 jobs
+ failed after 435 / 452 jobs
+ failed after 436 / 452 jobs
+ failed after 438 / 452 jobs

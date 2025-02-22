@@ -1,0 +1,160 @@
+The given problem seems to be unschedulable using our scheduler, and the rating of the root node is 0.
+The problem passed the necessary load-based feasibility test.
+The problem passed the necessary interval-based feasibility test.
+Since the rating of the root node is 0, I will need to create a safe job ordering from scratch, which may take seconds or centuries...
+You should press Control + C if you run out of patience!
+ failed after 19 / 902 jobs
+ failed after 39 / 902 jobs
+ failed after 67 / 902 jobs
+ failed after 72 / 902 jobs
+ failed after 80 / 902 jobs
+ failed after 81 / 902 jobs
+ failed after 83 / 902 jobs
+ failed after 88 / 902 jobs
+ failed after 90 / 902 jobs
+ failed after 123 / 902 jobs
+ failed after 128 / 902 jobs
+ failed after 172 / 902 jobs
+ failed after 173 / 902 jobs
+ failed after 180 / 902 jobs
+ failed after 210 / 902 jobs
+ failed after 217 / 902 jobs
+ failed after 218 / 902 jobs
+ failed after 220 / 902 jobs
+ failed after 223 / 902 jobs
+ failed after 224 / 902 jobs
+ failed after 242 / 902 jobs
+ failed after 246 / 902 jobs
+ failed after 249 / 902 jobs
+ failed after 261 / 902 jobs
+ failed after 263 / 902 jobs
+ failed after 268 / 902 jobs
+ failed after 269 / 902 jobs
+ failed after 271 / 902 jobs
+ failed after 308 / 902 jobs
+ failed after 309 / 902 jobs
+ failed after 352 / 902 jobs
+ failed after 354 / 902 jobs
+ failed after 396 / 902 jobs
+ failed after 422 / 902 jobs
+ failed after 432 / 902 jobs
+ failed after 435 / 902 jobs
+ failed after 441 / 902 jobs
+ failed after 475 / 902 jobs
+ failed after 476 / 902 jobs
+ failed after 477 / 902 jobs
+ failed after 478 / 902 jobs
+ failed after 480 / 902 jobs
+ failed after 488 / 902 jobs
+ failed after 489 / 902 jobs
+ failed after 501 / 902 jobs
+ failed after 526 / 902 jobs
+ failed after 529 / 902 jobs
+ failed after 534 / 902 jobs
+ failed after 535 / 902 jobs
+ failed after 539 / 902 jobs
+ failed after 565 / 902 jobs
+ failed after 574 / 902 jobs
+ failed after 576 / 902 jobs
+ failed after 577 / 902 jobs
+ failed after 578 / 902 jobs
+ failed after 579 / 902 jobs
+ failed after 617 / 902 jobs
+ failed after 655 / 902 jobs
+ failed after 658 / 902 jobs
+ failed after 668 / 902 jobs
+ failed after 669 / 902 jobs
+ failed after 670 / 902 jobs
+ failed after 685 / 902 jobs
+ failed after 712 / 902 jobs
+ failed after 715 / 902 jobs
+ failed after 726 / 902 jobs
+ failed after 751 / 902 jobs
+ failed after 754 / 902 jobs
+ failed after 757 / 902 jobs
+ failed after 759 / 902 jobs
+ failed after 760 / 902 jobs
+ failed after 761 / 902 jobs
+ failed after 764 / 902 jobs
+ failed after 787 / 902 jobs
+ failed after 790 / 902 jobs
+ failed after 793 / 902 jobs
+ failed after 796 / 902 jobs
+ failed after 797 / 902 jobs
+ failed after 802 / 902 jobs
+ failed after 833 / 902 jobs
+ failed after 837 / 902 jobs
+ failed after 848 / 902 jobs
+ failed after 855 / 902 jobs
+ failed after 861 / 902 jobs
+ failed after 863 / 902 jobs
+ failed after 886 / 902 jobs
+ failed after 888 / 902 jobs
+ failed after 889 / 902 jobs
+ failed after 890 / 902 jobs
+ failed after 891 / 902 jobs
+ failed after 894 / 902 jobs
+ failed after 895 / 902 jobs
+ failed after 896 / 902 jobs
+I found a safe job ordering!
+Time to make cuts...
+ increased #extra constraints to 20
+ increased #extra constraints to 28
+ increased #extra constraints to 45
+ increased #extra constraints to 55
+ increased #extra constraints to 59
+ increased #extra constraints to 68
+ increased #extra constraints to 70
+ increased #extra constraints to 91
+ increased #extra constraints to 99
+ increased #extra constraints to 108
+ increased #extra constraints to 114
+ increased #extra constraints to 133
+ increased #extra constraints to 158
+ increased #extra constraints to 159
+ increased #extra constraints to 182
+ increased #extra constraints to 185
+ increased #extra constraints to 196
+ increased #extra constraints to 202
+ increased #extra constraints to 209
+ increased #extra constraints to 215
+ increased #extra constraints to 218
+ increased #extra constraints to 222
+ increased #extra constraints to 227
+ increased #extra constraints to 235
+ increased #extra constraints to 246
+ increased #extra constraints to 254
+ increased #extra constraints to 262
+ increased #extra constraints to 272
+ increased #extra constraints to 291
+ increased #extra constraints to 295
+ increased #extra constraints to 296
+ increased #extra constraints to 312
+ increased #extra constraints to 317
+ increased #extra constraints to 338
+ increased #extra constraints to 357
+ increased #extra constraints to 370
+ increased #extra constraints to 380
+ increased #extra constraints to 395
+ increased #extra constraints to 396
+ increased #extra constraints to 413
+ increased #extra constraints to 420
+ increased #extra constraints to 427
+ increased #extra constraints to 436
+ increased #extra constraints to 443
+ increased #extra constraints to 448
+ increased #extra constraints to 467
+ increased #extra constraints to 479
+ increased #extra constraints to 481
+ increased #extra constraints to 499
+ increased #extra constraints to 506
+ increased #extra constraints to 520
+ increased #extra constraints to 532
+ increased #extra constraints to 543
+ increased #extra constraints to 566
+ increased #extra constraints to 567
+ increased #extra constraints to 573
+ increased #extra constraints to 588
+ increased #extra constraints to 592
+ increased #extra constraints to 598
+ increased #extra constraints to 626
