@@ -6,7 +6,7 @@ sealed class JobSetGenerationError {
 
 data object JobGenerationTimeout : JobSetGenerationError() {
 	override fun print() {
-		println("Job generator timed out")
+		println("Job generation timed out")
 	}
 }
 
