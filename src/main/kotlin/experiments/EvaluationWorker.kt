@@ -1,8 +1,9 @@
 package experiments
 
+import java.io.ByteArrayInputStream
 import java.io.InputStream
+import java.io.InputStreamReader
 import java.util.Queue
-import java.util.Scanner
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.TimeUnit
 
@@ -28,11 +29,15 @@ class EvaluationWorker(
 	}
 }
 
-private fun readLines(input: InputStream): List<String> {
-	val scanner = Scanner(input)
-	val lines = mutableListOf<String>()
-	while (scanner.hasNextLine()) lines.add(scanner.nextLine())
-	return lines
+private fun readNonBlockingLines(input: InputStream): List<String> {
+	val bytes = mutableListOf<Byte>()
+	while (input.available() > 0) {
+		val nextByte = input.read()
+		if (nextByte == -1) break
+		bytes.add(nextByte.toByte())
+	}
+
+	return InputStreamReader(ByteArrayInputStream(bytes.toByteArray())).readLines()
 }
 
 private fun evaluate(jobSet: JobSet): JobSetEvaluationOutput {
@@ -41,12 +46,21 @@ private fun evaluate(jobSet: JobSet): JobSetEvaluationOutput {
 		"-m", jobSet.numCores.toString(), "--reconfigure"
 	))
 	val startTime = System.nanoTime()
-	val exitCode = if (process.waitFor(1, TimeUnit.MINUTES)) process.exitValue() else {
+	val timedOut = !process.waitFor(1, TimeUnit.MINUTES)
+	val spentTime = System.nanoTime() - startTime
+
+	val output: List<String>
+	val errors: List<String>
+	val exitCode = if (timedOut) {
+		output = readNonBlockingLines(process.inputStream)
+		errors = readNonBlockingLines(process.errorStream)
 		process.destroy()
 		null
+	} else {
+		output = process.inputReader().readLines()
+		errors = process.errorReader().readLines()
+		process.exitValue()
 	}
-	val spentTime = System.nanoTime() - startTime
-	val output = readLines(process.inputStream)
-	val errors = readLines(process.errorStream)
+
 	return JobSetEvaluationOutput(jobSet, spentTime / 1_000_000L, exitCode, output, errors)
 }
