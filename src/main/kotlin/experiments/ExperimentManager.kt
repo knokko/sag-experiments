@@ -22,8 +22,8 @@ private class ExperimentManager {
 	private val classificationThreads = mutableListOf<Thread>()
 
 	fun run() {
-		repeat(5) { generationThreads.add(GenerationWorker(sourceQueue, jobQueue, generationErrorQueue).start()) }
-		repeat(10) { evaluationThreads.add(EvaluationWorker(jobQueue, evaluationQueue).start()) }
+		repeat(2) { generationThreads.add(GenerationWorker(sourceQueue, jobQueue, generationErrorQueue).start()) }
+		repeat(8) { evaluationThreads.add(EvaluationWorker(jobQueue, evaluationQueue).start()) }
 		classificationThreads.add(ClassificationWorker(evaluationQueue).start())
 
 		while (true) {

@@ -37,7 +37,7 @@ class GenerationWorker(
 		source.config.write(tempConfig)
 
 		val process = Runtime.getRuntime().exec(arrayOf(GENERATOR.absolutePath, "-config", tempConfig.absolutePath))
-		if (process.waitFor(10, TimeUnit.SECONDS)) {
+		if (process.waitFor(1, TimeUnit.MINUTES)) {
 			val exitCode = process.exitValue()
 			if (exitCode == 0) {
 				for (jobSet in collect(

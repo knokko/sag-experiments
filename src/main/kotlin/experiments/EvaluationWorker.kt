@@ -46,7 +46,7 @@ private fun evaluate(jobSet: JobSet): JobSetEvaluationOutput {
 		"-m", jobSet.numCores.toString(), "--reconfigure"
 	))
 	val startTime = System.nanoTime()
-	val timedOut = !process.waitFor(1, TimeUnit.MINUTES)
+	val timedOut = !process.waitFor(5, TimeUnit.MINUTES)
 	val spentTime = System.nanoTime() - startTime
 
 	val output: List<String>
