@@ -60,6 +60,8 @@ fun main(args: Array<String>) {
 				while (inputReader.ready()) processOutput.add(inputReader.readLine())
 				while (errorReader.ready()) processErrors.add(errorReader.readLine())
 			}
+			while (inputReader.ready()) processOutput.add(inputReader.readLine())
+			while (errorReader.ready()) processErrors.add(errorReader.readLine())
 			if (process.isAlive) {
 				process.destroy()
 				processOutput.add("The process timed out after 150 seconds")
