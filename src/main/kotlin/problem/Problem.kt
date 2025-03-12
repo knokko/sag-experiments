@@ -26,9 +26,10 @@ class Problem(jobsFile: File, precedenceFile: File?, val numCores: Int) {
 	}
 
 	fun setSize(
-		desiredNumJobs: Int, minNumJobs: Int, maxNumJobs: Int,
+		desiredDuration: Long, desiredNumJobs: Int, minNumJobs: Int, maxNumJobs: Int,
 		desiredLastDeadline: Long, minLastDeadline: Long, maxLastDeadline: Long
 	): Boolean {
+		jobs.sortBy { it.arrivalMax }
 		if (jobs.size < minNumJobs) return false
 		if (jobs.size > maxNumJobs) {
 			while (jobs.size > desiredNumJobs) jobs.removeAt(jobs.size - 1)
@@ -42,7 +43,10 @@ class Problem(jobsFile: File, precedenceFile: File?, val numCores: Int) {
 		val lastDeadline = jobs.maxOf { it.deadline }
 		if (lastDeadline < minLastDeadline || lastDeadline > maxLastDeadline) {
 			val scale = desiredLastDeadline.toDouble() / lastDeadline
-			for (job in jobs) job.scale(scale)
+			for (job in jobs) job.scaleTimeInstants(scale)
+			val actualDuration = jobs.sumOf { it.costMax }.toDouble() / jobs.size
+			val durationScale = desiredDuration / actualDuration
+			for (job in jobs) job.scaleExecutionTimes(durationScale)
 		}
 		return true
 	}

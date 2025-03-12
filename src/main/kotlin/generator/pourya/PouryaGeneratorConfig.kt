@@ -6,6 +6,7 @@ import problem.Problem
 import java.io.File
 import java.nio.file.Files
 import java.util.concurrent.TimeUnit
+import kotlin.math.abs
 import kotlin.math.roundToInt
 
 class PouryaGeneratorConfig(
@@ -42,10 +43,13 @@ class PouryaGeneratorConfig(
 		var timeout = 1
 
 		val niceUtilization = (100 * utilization).roundToInt()
+		val precedenceDescription = if (addPrecedenceConstraints) "prec" else "no-prec"
 		val outerFolder = File(
 			"$FEASIBILITY_RESULTS_FOLDER/${desiredNumJobs}jobs_${niceUtilization}util_" +
-					"${numCores}cores_${addPrecedenceConstraints}_${desiredJobLengths}durations"
+					"${numCores}cores_${precedenceDescription}_${desiredJobLengths}durations"
 		)
+
+		val candidateProblems = mutableListOf<Problem?>()
 
 		var remaining = amount
 		while (remaining > 0) {
@@ -60,34 +64,45 @@ class PouryaGeneratorConfig(
 				val jobSet = jobSets.iterator().next()
 				val problem = Problem(jobSet.jobFile, jobSet.precedenceFile, jobSet.numCores)
 
-				if (problem.setSize(
-					desiredNumJobs = desiredNumJobs, minNumJobs = minNumJobs, maxNumJobs = maxNumJobs,
-					desiredLastDeadline = desiredLastDeadline, minLastDeadline = minLastDeadline, maxLastDeadline = maxLastDeadline
-				)) {
-					remaining -= 1
-					val innerFolder = File("$outerFolder/case$remaining")
-					innerFolder.mkdirs()
-					problem.write(File("$innerFolder/jobs.csv"), File("$innerFolder/precedence.csv"))
+				if (problem.jobs.size >= minNumJobs) {
+					candidateProblems.add(problem)
+					if (problem.jobs.size <= maxNumJobs || candidateProblems.size >= 5) {
+						val bestProblem = candidateProblems.filterNotNull().minBy {
+							abs(it.jobs.size - desiredNumJobs)
+						}
+						println("desired #jobs is $desiredNumJobs and best #jobs is ${bestProblem.jobs.size} and last #jobs is ${problem.jobs.size}")
+						if (!bestProblem.setSize(
+							desiredDuration = desiredJobLengths, desiredNumJobs = desiredNumJobs,
+							minNumJobs = minNumJobs, maxNumJobs = maxNumJobs,
+							desiredLastDeadline = desiredLastDeadline, minLastDeadline = minLastDeadline,
+							maxLastDeadline = maxLastDeadline
+						)) {
+							throw Error()
+						}
+						remaining -= 1
+						val innerFolder = File("$outerFolder/case$remaining")
+						innerFolder.mkdirs()
+						bestProblem.write(File("$innerFolder/jobs.csv"), File("$innerFolder/precedence.csv"))
+						candidateProblems.clear()
+					} else candidateProblems.add(null)
 				} else {
-					maxJobIndex += 1
-					println("not enough jobs with: ${maxJobs[maxJobIndex - 1]} max #jobs")
+					if (candidateProblems.isEmpty()) maxJobIndex += 1
+					else candidateProblems.add(null)
 				}
 			} else {
-				maxJobIndex += 1
-				println("timed out with: ${maxJobs[maxJobIndex - 1]} max #jobs")
+				if (candidateProblems.isEmpty()) maxJobIndex += 1
+				else candidateProblems.add(null)
 				process.destroy()
 			}
 
 			if (maxJobIndex == maxJobs.size) {
 				if (timeout == 1) {
-					println("Increasing timeout...")
+					println("Increasing timeout for $outerFolder")
 					maxJobIndex = 0
 					timeout = 5
 				} else {
-					println("failed to generate job set for numJobs=$desiredNumJobs numCores=$numCores " +
-							"precedence=$addPrecedenceConstraints jobLength=$desiredJobLengths utilization=$utilization")
-					println("the config is at $tempConfig")
-					break
+					println("failed to generate job set for $outerFolder with config $tempConfig")
+					return
 				}
 			}
 			tempJobsFolder.deleteRecursively()
@@ -95,5 +110,6 @@ class PouryaGeneratorConfig(
 
 		tempConfig.delete()
 		tempJobsFolder.deleteRecursively()
+		println("generated job set for $outerFolder")
 	}
 }

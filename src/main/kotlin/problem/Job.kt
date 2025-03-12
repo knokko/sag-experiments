@@ -1,6 +1,7 @@
 package problem
 
 import java.lang.Integer.parseInt
+import java.lang.Long.max
 import java.lang.Long.parseLong
 import kotlin.math.roundToLong
 
@@ -15,12 +16,16 @@ class Job(
 	val priority: Int,
 ) {
 
-	fun scale(s: Double) {
+	fun scaleTimeInstants(s: Double) {
 		arrivalMin = (s * arrivalMin).roundToLong()
 		arrivalMax = (s * arrivalMax).roundToLong()
-		costMin = (s * costMin).roundToLong()
-		costMax = (s * costMax).roundToLong()
+
 		deadline = (s * deadline).roundToLong()
+	}
+
+	fun scaleExecutionTimes(s: Double) {
+		costMin = max(1L, (s * costMin).roundToLong())
+		costMax = max(1L, (s * costMax).roundToLong())
 	}
 
 	companion object {
