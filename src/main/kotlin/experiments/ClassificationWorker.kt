@@ -32,7 +32,7 @@ private fun classify(evaluation: JobSetEvaluationOutput) {
 	if (evaluation.output.any { it.contains("is already schedulable") }) return
 
 	val sha1 = MessageDigest.getInstance("SHA-1")
-	for (file in arrayOf(evaluation.jobSet.jobFile, evaluation.jobSet.precedenceFile, evaluation.jobSet.configFile)) {
+	for (file in arrayOf(evaluation.jobSet.jobFile, evaluation.jobSet.precedenceFile!!, evaluation.jobSet.configFile)) {
 		sha1.update(Files.readAllBytes(file.toPath()))
 	}
 

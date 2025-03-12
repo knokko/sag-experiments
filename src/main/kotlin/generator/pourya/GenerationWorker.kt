@@ -1,9 +1,11 @@
-package experiments
+package generator.pourya
 
+import experiments.*
 import java.io.File
+import java.lang.Boolean.parseBoolean
 import java.lang.Integer.parseInt
 import java.nio.file.Files
-import java.util.Queue
+import java.util.*
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.TimeUnit
 
@@ -30,7 +32,7 @@ class GenerationWorker(
 
 	private fun generate(source: JobSetSource) {
 		val tempJobsFolder = Files.createTempDirectory("").toFile()
-		source.config.prepareJobGeneration(tempJobsFolder, source.amount)
+		source.config.prepareJobGeneration(tempJobsFolder, source.amount, emptyMap())
 
 		val tempConfig = Files.createTempFile("", ".yaml").toFile()
 		tempConfig.deleteOnExit()
@@ -41,10 +43,17 @@ class GenerationWorker(
 			val exitCode = process.exitValue()
 			if (exitCode == 0) {
 				for (jobSet in collect(
-					tempConfig, tempJobsFolder, source.amount, parseInt(source.config.get("number_of_cores")))
-				) jobQueue.add(jobSet)
+					tempConfig, tempJobsFolder, source.amount,
+					parseInt(source.config.get("number_of_cores")), parseBoolean(source.config.get("generate_dags"))
+				)) jobQueue.add(jobSet)
 			} else {
-				errorQueue.add(JobGenerationNonZero(exitCode, process.inputReader().readLines(), process.errorReader().readLines()))
+				errorQueue.add(
+					JobGenerationNonZero(
+						exitCode,
+						process.inputReader().readLines(),
+						process.errorReader().readLines()
+					)
+				)
 				tempConfig.delete()
 				tempJobsFolder.deleteRecursively()
 			}
@@ -57,7 +66,10 @@ class GenerationWorker(
 	}
 }
 
-private fun collect(configFile: File, outputFolder: File, amount: Int, numCores: Int): Collection<JobSet> {
+fun collect(
+	configFile: File, outputFolder: File, amount: Int,
+	numCores: Int, hasPrecedenceConstraints: Boolean
+): Collection<JobSet> {
 	var jobsFolder = outputFolder
 	fun reportInvalid(): Nothing {
 		throw IllegalArgumentException("invalid jobs folder $outputFolder -> $jobsFolder")
@@ -81,9 +93,11 @@ private fun collect(configFile: File, outputFolder: File, amount: Int, numCores:
 	val files = jobsFolder.listFiles() ?: reportInvalid()
 	for (counter in 0 until amount) {
 		val jobsFile = files.find { it.name.endsWith("_$counter.csv") } ?: reportInvalid()
-		val precedenceFile = files.find { it.name.endsWith("_$counter.prec.csv") } ?: reportInvalid()
 		jobsFile.deleteOnExit()
-		precedenceFile.deleteOnExit()
+		val precedenceFile = if (hasPrecedenceConstraints) {
+			files.find { it.name.endsWith("_$counter.prec.csv") } ?: reportInvalid()
+		} else null
+		precedenceFile?.deleteOnExit()
 		result.add(JobSet(configFile, numCores, jobsFile, precedenceFile))
 	}
 	return result

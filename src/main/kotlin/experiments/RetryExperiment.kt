@@ -1,7 +1,8 @@
 package experiments
 
-import generator.GeneratorConfig
-import generator.generate
+import generator.knokko.KnokkoGeneratorConfig
+import generator.knokko.generate
+import generator.pourya.YamlFile
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
@@ -94,35 +95,28 @@ private fun addFeasibilityExperiment(experiments: MutableCollection<Experiment>,
 		return
 	}
 
-	val config = GeneratorConfig(
+	val config = KnokkoGeneratorConfig(
 		numCores = numCores, numJobs = numJobs, numPrecedenceConstraints = numPrecedenceConstraints,
-		lastDeadline = lastDeadline, maxPriority = maxPriority,
-		minUtilization = minUtilization, maxUtilization = maxUtilization
+		desiredJobLengths = numCores * lastDeadline / numJobs, lastDeadline = lastDeadline,
+		maxPriority = maxPriority, minUtilization = minUtilization, maxUtilization = maxUtilization
 	)
 	val jobsFile = File("jobs.csv")//Files.createTempFile("", ".csv")
 	val precedenceFile = File("precedence.csv")
 	generate(config, jobsFile, precedenceFile)
 
-	val necessaryProcess = Runtime.getRuntime().exec(
-		arrayOf(
-			NP_TEST.absolutePath, jobsFile.absolutePath,
-			"-p", precedenceFile.absolutePath,
-			"-m", config.numCores.toString(),
-			"--feasibility-exact", "--feasibility-hide-schedule",
-			"--feasibility-threads", numThreads.toString()
+	for (solver in arrayOf("cplex", "minisat", "z31")) {
+		val rawSolver = if (solver.contains("z3")) "z3" else solver
+		val process = Runtime.getRuntime().exec(
+			arrayOf(
+				NP_TEST.absolutePath, jobsFile.absolutePath,
+				"-p", precedenceFile.absolutePath,
+				"-m", config.numCores.toString(),
+				"--feasibility-threads", numThreads.toString(),
+				"--feasibility-$rawSolver"
+			) + (if (rawSolver == "z3") arrayOf(solver.substring(2)) else emptyArray<String>())
 		)
-	)
-	experiments.add(Experiment(necessaryProcess, "feasibility", "necessary"))
-
-	val z3Process = Runtime.getRuntime().exec(
-		arrayOf(
-			NP_TEST.absolutePath, jobsFile.absolutePath,
-			"-p", precedenceFile.absolutePath,
-			"-m", config.numCores.toString(),
-			"--feasibility-z3", "--feasibility-hide-schedule"
-		)
-	)
-	experiments.add(Experiment(z3Process, "feasibility", "z3"))
+		experiments.add(Experiment(process, "feasibility", solver))
+	}
 }
 
 private fun addDefaultExperiment(experiments: MutableCollection<Experiment>, userCommand: String) {

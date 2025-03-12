@@ -1,4 +1,4 @@
-package generator
+package generator.knokko
 
 import java.io.File
 import java.io.PrintWriter
@@ -7,7 +7,7 @@ import kotlin.math.roundToLong
 import kotlin.random.Random
 import kotlin.random.nextLong
 
-fun generate(config: GeneratorConfig, jobsDestination: File, precedenceDestination: File) {
+fun generate(config: KnokkoGeneratorConfig, jobsDestination: File, precedenceDestination: File) {
 	class RawJob(var startTime: Long, var endTime: Long)
 
 	class Core(val lastDeadline: Long) {
@@ -77,6 +77,7 @@ fun generate(config: GeneratorConfig, jobsDestination: File, precedenceDestinati
 		val writer = PrintWriter(precedenceDestination)
 		writer.println("From TID,From JID,To TID,To JID")
 		for (counter in 0 until config.numPrecedenceConstraints) {
+			var emergency = 0
 			while (true) {
 				val index1 = rng.nextInt(jobs.size)
 				val index2 = rng.nextInt(jobs.size)
@@ -84,6 +85,8 @@ fun generate(config: GeneratorConfig, jobsDestination: File, precedenceDestinati
 					writer.println("$index1,1,$index2,1")
 					break
 				}
+				emergency += 1
+				if (emergency > 10) break
 			}
 		}
 		writer.flush()

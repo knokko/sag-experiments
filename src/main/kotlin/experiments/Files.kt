@@ -9,3 +9,4 @@ val GENERATOR = File("$GENERATOR_FOLDER/generate")
 val GENERATOR_EXAMPLES = File("$GENERATOR_FOLDER/example/")
 
 val RESULTS_FOLDER = File("results")
+val FEASIBILITY_RESULTS_FOLDER = File("feasibility-results")

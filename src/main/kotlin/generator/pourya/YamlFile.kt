@@ -1,4 +1,4 @@
-package experiments
+package generator.pourya
 
 import java.io.File
 import java.lang.Double.parseDouble
@@ -20,14 +20,15 @@ class YamlFile(source: File) {
 		}
 	}
 
-	fun prepareJobGeneration(outputFolder: File, amount: Int) {
+	fun prepareJobGeneration(outputFolder: File, amount: Int, extra: Map<String, String>) {
 		entries["path"] = "\"${outputFolder.absolutePath}\""
 		entries["output_format"] = "csv"
 		entries["num_sets"] = amount.toString()
-		entries["generate_dags"] = "true"
 		entries["generate_dot"] = "false"
 		entries["generate_job_sets"] = "true"
+		entries["run_parallel"] = "false"
 		entries["verbose"] = "0"
+		for ((extraKey, extraValue) in extra) entries[extraKey] = extraValue
 	}
 
 	fun write(destination: File) {

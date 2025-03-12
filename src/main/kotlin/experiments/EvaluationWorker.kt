@@ -1,5 +1,6 @@
 package experiments
 
+import generator.pourya.JobSet
 import java.io.ByteArrayInputStream
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -42,7 +43,7 @@ private fun readNonBlockingLines(input: InputStream): List<String> {
 
 private fun evaluate(jobSet: JobSet): JobSetEvaluationOutput {
 	val process = Runtime.getRuntime().exec(arrayOf(
-		NP_TEST.absolutePath, jobSet.jobFile.absolutePath, "-p", jobSet.precedenceFile.absolutePath,
+		NP_TEST.absolutePath, jobSet.jobFile.absolutePath, "-p", jobSet.precedenceFile!!.absolutePath,
 		"-m", jobSet.numCores.toString(), "--reconfigure"
 	))
 	val startTime = System.nanoTime()
@@ -64,3 +65,11 @@ private fun evaluate(jobSet: JobSet): JobSetEvaluationOutput {
 
 	return JobSetEvaluationOutput(jobSet, spentTime / 1_000_000L, exitCode, output, errors)
 }
+
+class JobSetEvaluationOutput(
+	val jobSet: JobSet,
+	val spentMilliseconds: Long,
+	val exitCode: Int?,
+	val output: List<String>,
+	val errors: List<String>
+)
