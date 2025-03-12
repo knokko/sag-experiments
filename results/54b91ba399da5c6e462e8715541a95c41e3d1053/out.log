@@ -1,5 +1,0 @@
-The given problem seems to be unschedulable using our scheduler, and the rating of the root node is 0.
-The problem passed the necessary load-based feasibility test.
-The given problem is infeasible. Assuming worst-case execution times and latest arrival times for all jobs, and maximum suspensions for all precedence constraints:
- - between time 71000 and time 74617, the processors must spent at least 16841 time units executing jobs, which requires more than 4 processors.
-Reconfiguration took 1.65395 seconds (1.59154 CPU seconds) and consumed 57MB of memory
