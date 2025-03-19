@@ -17,12 +17,24 @@
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
   </properties>
 
+  <repositories>
+    <repository>
+      <id>kotlin-ds</id>
+      <url>https://packages.jetbrains.team/maven/p/kds/kotlin-ds-maven</url>
+    </repository>
+  </repositories>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>org.jetbrains.kotlin</groupId>
         <artifactId>kotlin-stdlib</artifactId>
         <version>${kotlin.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jetbrains.kotlinx</groupId>
+        <artifactId>kotlin-statistics-jvm</artifactId>
+        <version>0.8.0</version>
       </dependency>
       <dependency>
         <groupId>org.junit</groupId>
@@ -39,6 +51,16 @@
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlinx</groupId>
+      <artifactId>kandy-lets-plot</artifactId>
+      <version>0.8.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlinx</groupId>
+      <artifactId>kotlin-statistics-jvm</artifactId>
+      <version>0.4.0</version>
     </dependency>
     <!-- Optionally: parameterized tests support -->
     <dependency>
@@ -61,7 +83,6 @@
 
   <build>
     <sourceDirectory>src/main/kotlin</sourceDirectory>
-    <testSourceDirectory>src/test/kotlin</testSourceDirectory>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
         <plugin>
@@ -134,7 +155,7 @@
           </execution>
         </executions>
         <configuration>
-          <jvmTarget>1.8</jvmTarget>
+          <jvmTarget>21</jvmTarget>
         </configuration>
       </plugin>
       <plugin>

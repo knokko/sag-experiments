@@ -1,11 +1,33 @@
 package experiments.feasibility
 
+import org.jetbrains.kotlinx.dataframe.api.DataFrameBuilder
+import org.jetbrains.kotlinx.dataframe.api.column
+import org.jetbrains.kotlinx.kandy.dsl.plot
+import org.jetbrains.kotlinx.kandy.letsplot.export.save
+import org.jetbrains.kotlinx.kandy.letsplot.layers.bars
+import org.jetbrains.kotlinx.kandy.letsplot.layers.line
+import org.jetbrains.kotlinx.kandy.letsplot.layers.points
 import java.io.File
 import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 fun main() {
+	val data = mapOf(
+		"solver" to listOf("heuristic", "z3"),
+		"feasible" to listOf(30, 15),
+		"infeasible" to listOf(5, 3),
+		"unsolved" to listOf(2, 10)
+	)
+	plot(data) {
+		points {
+			x(column<String>("solver"))
+			y(column<Int>("feasible"))
+			size = 4.5
+		}
+	}.save("plot.png")
+	return
+
 	val outerFolders = File("feasibility-results").listFiles()!!
 	val results = Collections.synchronizedList(ArrayList<FeasibilityCaseResult>())
 	val threadPool = Executors.newFixedThreadPool(8)
@@ -101,4 +123,6 @@ fun main() {
 			println("  $unsolved / $total problems with precedence constraints were unsolved")
 		}
 	}
+
+
 }
