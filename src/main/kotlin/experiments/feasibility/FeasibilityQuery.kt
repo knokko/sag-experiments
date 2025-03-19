@@ -2,31 +2,49 @@ package experiments.feasibility
 
 import org.jetbrains.kotlinx.dataframe.api.DataFrameBuilder
 import org.jetbrains.kotlinx.dataframe.api.column
+import org.jetbrains.kotlinx.dataframe.api.groupBy
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.kandy.dsl.categorical
 import org.jetbrains.kotlinx.kandy.dsl.plot
 import org.jetbrains.kotlinx.kandy.letsplot.export.save
 import org.jetbrains.kotlinx.kandy.letsplot.layers.bars
 import org.jetbrains.kotlinx.kandy.letsplot.layers.line
 import org.jetbrains.kotlinx.kandy.letsplot.layers.points
+import org.jetbrains.kotlinx.kandy.util.color.Color
+import org.jetbrains.kotlinx.statistics.kandy.layers.countPlot
+import org.jetbrains.kotlinx.statistics.kandy.statplots.countPlot
+import org.jetbrains.kotlinx.statistics.kandy.stattransform.statCount
 import java.io.File
 import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 fun main() {
-	val data = mapOf(
-		"solver" to listOf("heuristic", "z3"),
-		"feasible" to listOf(30, 15),
-		"infeasible" to listOf(5, 3),
-		"unsolved" to listOf(2, 10)
-	)
-	plot(data) {
-		points {
-			x(column<String>("solver"))
-			y(column<Int>("feasible"))
-			size = 4.5
-		}
-	}.save("plot.png")
-	return
+//	val data = mapOf(
+//		"solver" to listOf("heuristic", "z3"),
+//		"feasible" to listOf(30, 15),
+//		"infeasible" to listOf(5, 3),
+//		"unsolved" to listOf(2, 10)
+//	)
+//	val data = mapOf(
+//		"utilization" to listOf("30%", "100%", "100%", "90%"),
+//		"classification" to listOf("feasible", "infeasible", "unsolved", "feasible"),
+//	)
+//	data.toDataFrame().groupBy("classification").plot {
+//		countPlot("utilization") {
+//			fillColor("classification") {
+//				scale = categorical(listOf(Color.GREEN, Color.BLUE, Color.RED))
+//			}
+//		}
+//	}.save("bars.png")
+//	plot(data) {
+//		points {
+//			x(column<String>("solver"))
+//			y(column<Int>("feasible"))
+//			size = 4.5
+//		}
+//
+//	}.save("plot.png")
 
 	val outerFolders = File("feasibility-results").listFiles()!!
 	val results = Collections.synchronizedList(ArrayList<FeasibilityCaseResult>())
@@ -124,5 +142,23 @@ fun main() {
 		}
 	}
 
+	fun classification(certainlyFeasible: Boolean, certainlyInfeasible: Boolean): String {
+		if (certainlyFeasible) return "feasible"
+		if (certainlyInfeasible) return "infeasible"
+		return "unsolved"
+	}
 
+	run {
+		val data = mapOf(
+			"utilization" to results.map { "${it.config.utilization}%" },
+			"classification" to results.map { classification(it.certainlyFeasible, it.certainlyInfeasible) }
+		)
+		data.toDataFrame().groupBy("classification").plot {
+			countPlot("utilization") {
+				fillColor("classification") {
+					scale = categorical(listOf(Color.GREEN, Color.BLUE, Color.RED))
+				}
+			}
+		}.save("total-utilization-vs-classification.png")
+	}
 }
