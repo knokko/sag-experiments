@@ -18,20 +18,20 @@ fun main() {
 
 	for (folder in problemFolders) {
 		reconfigurationPool.submit {
-			val ratingGraph = File("$folder/rating-graph.bin")
+			val scratchJobOrderingFile = File("$folder/scratch-ordering.bin")
 			val numCores = run {
 				val endIndex = folder.path.indexOf("cores")
 				parseInt(folder.path.substring(endIndex - 1, endIndex))
 			}
 			val process = Runtime.getRuntime().exec(arrayOf(
 				NP_TEST.absolutePath, File("$folder/jobs.csv").absolutePath,
-				"-p", File("$folder/precedence.csv").absolutePath, "--reconfigure",
+				"-p", File("$folder/precedence.csv").absolutePath, "--feasibility-exact",
 				"-m", numCores.toString(),
-				"--reconfigure-save-rating-graph", ratingGraph.absolutePath,
-				"--reconfigure-rating-timeout", "60"
+				"--feasibility-save-job-ordering", scratchJobOrderingFile.absolutePath,
+				"-l", "300"
 			))
 
-			val hardTimeOut = System.nanoTime() + 100_000_000_000L
+			val hardTimeOut = System.nanoTime() + 350_000_000_000L
 			val processOutput = ArrayList<String>()
 			val outputReader = process.inputReader()
 			val processErrors = ArrayList<String>()
@@ -45,27 +45,23 @@ fun main() {
 			while (outputReader.ready()) processOutput.add(outputReader.readLine())
 			while (errorReader.ready()) processErrors.add(errorReader.readLine())
 
-			var succeeded = ratingGraph.isFile
+			var succeeded = scratchJobOrderingFile.isFile
 			if (process.isAlive) {
 				process.destroy()
-				println("WARNING: hit hard timeout for $folder")
+				println("WARNING: hit hard from-scratch timeout for $folder")
 				succeeded = false
 			}
 
-			if (succeeded) {
-				val exitCode = process.exitValue()
-				println("Finished rating graph for $folder with exit code $exitCode")
-				if (exitCode == 0 || exitCode == 2) {
-					val outputFile = File("$folder/rating-graph.out")
-					Files.write(outputFile.toPath(), processOutput)
+			println("Found from-scratch path for $folder? $succeeded")
+			if (!succeeded) scratchJobOrderingFile.delete()
+			val outputFile = File("$folder/scratch-job-ordering.out")
+			Files.write(outputFile.toPath(), processOutput)
 
-					val errorsFile = File("$folder/rating-graph.err")
-					if (processErrors.isNotEmpty()) {
-						Files.write(errorsFile.toPath(), processErrors)
-						println("Rating graph for $folder has errors")
-					} else errorsFile.delete()
-				} else folder.deleteRecursively()
-			} else folder.deleteRecursively()
+			val errorsFile = File("$folder/scratch-job-ordering.err")
+			if (processErrors.isNotEmpty()) {
+				Files.write(errorsFile.toPath(), processErrors)
+				println("Scratch job ordering for $folder has errors")
+			} else errorsFile.delete()
 		}
 	}
 	reconfigurationPool.shutdown()
