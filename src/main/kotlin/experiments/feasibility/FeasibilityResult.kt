@@ -58,7 +58,7 @@ class FeasibilityConfig(
 		fun parse(folder: File): FeasibilityConfig {
 			val numJobs = run {
 				val endIndex = folder.path.indexOf("jobs")
-				val startIndex = folder.path.lastIndexOf("/", endIndex) + 1
+				val startIndex = folder.path.lastIndexOf(File.separator, endIndex) + 1
 				parseInt(folder.path.substring(startIndex, endIndex))
 			}
 			val utilization = run {
