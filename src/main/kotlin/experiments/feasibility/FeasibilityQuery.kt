@@ -3,20 +3,29 @@ package experiments.feasibility
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.kandy.dsl.categorical
+import org.jetbrains.kotlinx.kandy.dsl.continuous
 import org.jetbrains.kotlinx.kandy.dsl.plot
+import org.jetbrains.kotlinx.kandy.ir.feature.FeatureName
 import org.jetbrains.kotlinx.kandy.letsplot.export.save
 import org.jetbrains.kotlinx.kandy.letsplot.feature.layout
+import org.jetbrains.kotlinx.kandy.letsplot.feature.position
 import org.jetbrains.kotlinx.kandy.letsplot.layers.bars
 import org.jetbrains.kotlinx.kandy.letsplot.x
 import org.jetbrains.kotlinx.kandy.letsplot.y
 import org.jetbrains.kotlinx.kandy.util.color.Color
 import org.jetbrains.kotlinx.statistics.kandy.layers.countPlot
+import org.jetbrains.kotlinx.statistics.kandy.layers.heatmap
 import java.io.File
 import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 fun main() {
+//	plot {
+//		heatmap(listOf(1, 2, 3, 4), listOf("a", "b", "a", "a"), listOf(0.1, 0.7, 1.0, 1.0))
+//	}.save("test.png")
+//	return
+
 	val outerFolders = File("feasibility-results").listFiles()!!
 	val results = Collections.synchronizedList(ArrayList<FeasibilityCaseResult>())
 	val threadPool = Executors.newFixedThreadPool(8)
@@ -123,6 +132,9 @@ fun main() {
 		return "unsolved"
 	}
 
+	println("interval test: ${results.count { it.heuristicResult.certainlyInfeasible && it.heuristicResult.passedLoadTest }} out of ${results.count { it.heuristicResult.certainlyInfeasible }}")
+	println("Z3 generation timeouts: ${results.count { it.z3Result.generationTimedOut }} out of ${results.count { it.z3Result.timedOut }} out of ${results.size}")
+	println("Minisat generation timeouts: ${results.count { it.minisatResult?.generationTimedOut == true }} out of ${results.count { it.minisatResult?.timedOut == true }} out of ${results.count { it.minisatResult != null }}")
 	println(results.count { it.certainlyInfeasible && !it.heuristicResult.certainlyInfeasible && it.config.precedence })
 	println(results.count { it.certainlyFeasible && !it.heuristicResult.certainlyFeasible && !it.cplexResult.certainlyFeasible })
 	println(results.count { it.certainlyInfeasible && !it.heuristicResult.certainlyInfeasible && !it.z3Result.certainlyInfeasible })
@@ -179,58 +191,263 @@ fun main() {
 		}.save(file)
 	}
 
-	solverBars(results.count { it.certainlyFeasible }, listOf(
-		results.count { it.heuristicResult.certainlyFeasible },
-		results.count { it.z3Result.certainlyFeasible },
-		results.count { it.cplexResult.certainlyFeasible },
-		results.count { it.minisatResult?.certainlyFeasible == true }
-	), "number of problems solved", "feasible-problems-vs-solvers.png")
-	solverBars(results.count { it.certainlyInfeasible }, listOf(
-		results.count { it.heuristicResult.certainlyInfeasible },
-		results.count { it.z3Result.certainlyInfeasible },
-		results.count { it.cplexResult.certainlyInfeasible },
-		results.count { it.minisatResult?.certainlyInfeasible == true }
-	), "number of problems solved", "infeasible-problems-vs-solvers.png")
-	solverBars(results.count { !it.config.precedence && it.certainlyFeasible }, listOf(
-		results.count { !it.config.precedence && it.heuristicResult.certainlyFeasible },
-		results.count { !it.config.precedence && it.z3Result.certainlyFeasible },
-		results.count { !it.config.precedence && it.cplexResult.certainlyFeasible },
-		results.count { !it.config.precedence && it.minisatResult?.certainlyFeasible == true }
-	), "number of problems solved", "no-prec-feasible-problems-vs-solvers.png")
-	solverBars(results.count { !it.config.precedence && it.certainlyInfeasible }, listOf(
-		results.count { !it.config.precedence && it.heuristicResult.certainlyInfeasible },
-		results.count { !it.config.precedence && it.z3Result.certainlyInfeasible },
-		results.count { !it.config.precedence && it.cplexResult.certainlyInfeasible },
-		results.count { !it.config.precedence && it.minisatResult?.certainlyInfeasible == true }
-	), "number of problems solved", "no-prec-infeasible-problems-vs-solvers.png")
-	solverBars(results.count { it.config.precedence && it.certainlyFeasible }, listOf(
-		results.count { it.config.precedence && it.heuristicResult.certainlyFeasible },
-		results.count { it.config.precedence && it.z3Result.certainlyFeasible },
-		results.count { it.config.precedence && it.cplexResult.certainlyFeasible },
-		results.count { it.config.precedence && it.minisatResult?.certainlyFeasible == true }
-	), "number of problems solved", "only-prec-feasible-problems-vs-solvers.png")
-	solverBars(results.count { it.config.precedence && it.certainlyInfeasible }, listOf(
-		results.count { it.config.precedence && it.heuristicResult.certainlyInfeasible },
-		results.count { it.config.precedence && it.z3Result.certainlyInfeasible },
-		results.count { it.config.precedence && it.cplexResult.certainlyInfeasible },
-		results.count { it.config.precedence && it.minisatResult?.certainlyInfeasible == true }
-	), "number of problems solved", "only-prec-infeasible-problems-vs-solvers.png")
+//	solverBars(results.count { it.certainlyFeasible }, listOf(
+//		results.count { it.heuristicResult.certainlyFeasible },
+//		results.count { it.z3Result.certainlyFeasible },
+//		results.count { it.cplexResult.certainlyFeasible },
+//		results.count { it.minisatResult?.certainlyFeasible == true }
+//	), "number of problems solved", "feasible-problems-vs-solvers.png")
+//	solverBars(results.count { it.certainlyInfeasible }, listOf(
+//		results.count { it.heuristicResult.certainlyInfeasible },
+//		results.count { it.z3Result.certainlyInfeasible },
+//		results.count { it.cplexResult.certainlyInfeasible },
+//		results.count { it.minisatResult?.certainlyInfeasible == true }
+//	), "number of problems solved", "infeasible-problems-vs-solvers.png")
+//	solverBars(results.count { !it.config.precedence && it.certainlyFeasible }, listOf(
+//		results.count { !it.config.precedence && it.heuristicResult.certainlyFeasible },
+//		results.count { !it.config.precedence && it.z3Result.certainlyFeasible },
+//		results.count { !it.config.precedence && it.cplexResult.certainlyFeasible },
+//		results.count { !it.config.precedence && it.minisatResult?.certainlyFeasible == true }
+//	), "number of problems solved", "no-prec-feasible-problems-vs-solvers.png")
+//	solverBars(results.count { !it.config.precedence && it.certainlyInfeasible }, listOf(
+//		results.count { !it.config.precedence && it.heuristicResult.certainlyInfeasible },
+//		results.count { !it.config.precedence && it.z3Result.certainlyInfeasible },
+//		results.count { !it.config.precedence && it.cplexResult.certainlyInfeasible },
+//		results.count { !it.config.precedence && it.minisatResult?.certainlyInfeasible == true }
+//	), "number of problems solved", "no-prec-infeasible-problems-vs-solvers.png")
+//	solverBars(results.count { !it.config.precedence && it.certainlyInfeasible && it.config.jobLength <= 20 && it.config.utilization == 90 }, listOf(
+//		results.count { !it.config.precedence && it.heuristicResult.certainlyInfeasible && it.config.jobLength <= 20 && it.config.utilization == 90 },
+//		results.count { !it.config.precedence && it.z3Result.certainlyInfeasible && it.config.jobLength <= 20 && it.config.utilization == 90 },
+//		results.count { !it.config.precedence && it.cplexResult.certainlyInfeasible && it.config.jobLength <= 20 && it.config.utilization == 90 },
+//		results.count { !it.config.precedence && it.minisatResult?.certainlyInfeasible == true && it.config.jobLength <= 20 && it.config.utilization == 90 }
+//	), "number of problems solved", "short-infeasible-problems-vs-solvers.png")
+//	solverBars(results.count { !it.config.precedence && it.certainlyFeasible && it.config.jobLength <= 20 && it.config.utilization == 90 }, listOf(
+//		results.count { !it.config.precedence && it.heuristicResult.certainlyFeasible && it.config.jobLength <= 20 && it.config.utilization == 90 },
+//		results.count { !it.config.precedence && it.z3Result.certainlyFeasible && it.config.jobLength <= 20 && it.config.utilization == 90 },
+//		results.count { !it.config.precedence && it.cplexResult.certainlyFeasible && it.config.jobLength <= 20 && it.config.utilization == 90 },
+//		results.count { !it.config.precedence && it.minisatResult?.certainlyFeasible == true && it.config.jobLength <= 20 && it.config.utilization == 90 }
+//	), "number of problems solved", "short-feasible-problems-vs-solvers.png")
+//	solverBars(results.count { it.config.precedence && it.certainlyFeasible }, listOf(
+//		results.count { it.config.precedence && it.heuristicResult.certainlyFeasible },
+//		results.count { it.config.precedence && it.z3Result.certainlyFeasible },
+//		results.count { it.config.precedence && it.cplexResult.certainlyFeasible },
+//		results.count { it.config.precedence && it.minisatResult?.certainlyFeasible == true }
+//	), "number of problems solved", "only-prec-feasible-problems-vs-solvers.png")
+//	solverBars(results.count { it.config.precedence && it.certainlyInfeasible }, listOf(
+//		results.count { it.config.precedence && it.heuristicResult.certainlyInfeasible },
+//		results.count { it.config.precedence && it.z3Result.certainlyInfeasible },
+//		results.count { it.config.precedence && it.cplexResult.certainlyInfeasible },
+//		results.count { it.config.precedence && it.minisatResult?.certainlyInfeasible == true }
+//	), "number of problems solved", "only-prec-infeasible-problems-vs-solvers.png")
 
 	fun isExclusiveFeasible(result: FeasibilityCaseResult, test: FeasibilityTest) = result.certainlyFeasible &&
 			result.getAll()[test]!!.certainlyFeasible && result.getAll().values.count { it.certainlyFeasible } == 1
 	fun isExclusiveInfeasible(result: FeasibilityCaseResult, test: FeasibilityTest) = result.certainlyInfeasible &&
 			result.getAll()[test]!!.certainlyInfeasible && result.getAll().values.count { it.certainlyInfeasible } == 1
 
-	solverBars(results.count { it.certainlyFeasible }, listOf(
-		results.count { isExclusiveFeasible(it, FeasibilityTest.HEURISTIC) },
-		results.count { isExclusiveFeasible(it, FeasibilityTest.Z3_MODEL1) },
-		results.count { isExclusiveFeasible(it, FeasibilityTest.CPLEX) },
-		0
-	), "number of problems exclusively solved", "feasible-problems-exclusive-solvers.png")
-	solverBars(results.count { it.certainlyInfeasible }, listOf(
-		results.count { isExclusiveInfeasible(it, FeasibilityTest.HEURISTIC) },
-		results.count { isExclusiveInfeasible(it, FeasibilityTest.Z3_MODEL1) },
-		results.count { isExclusiveInfeasible(it, FeasibilityTest.CPLEX) },
-		0
-	), "number of problems exclusively solved", "infeasible-problems-exclusive-solvers.png")
+//	solverBars(results.count { it.certainlyFeasible }, listOf(
+//		results.count { isExclusiveFeasible(it, FeasibilityTest.HEURISTIC) },
+//		results.count { isExclusiveFeasible(it, FeasibilityTest.Z3_MODEL1) },
+//		results.count { isExclusiveFeasible(it, FeasibilityTest.CPLEX) },
+//		0
+//	), "number of problems exclusively solved", "feasible-problems-exclusive-solvers.png")
+//	solverBars(results.count { it.certainlyInfeasible }, listOf(
+//		results.count { isExclusiveInfeasible(it, FeasibilityTest.HEURISTIC) },
+//		results.count { isExclusiveInfeasible(it, FeasibilityTest.Z3_MODEL1) },
+//		results.count { isExclusiveInfeasible(it, FeasibilityTest.CPLEX) },
+//		0
+//	), "number of problems exclusively solved", "infeasible-problems-exclusive-solvers.png")
+
+	fun utilizationBars(test: FeasibilityTest, label: String, file: String, condition: (FeasibilitySolverResult) -> Boolean) {
+		val testResults = results.mapNotNull { it.getAll()[test] }
+        plot {
+			x(listOf("30%", "70%", "90%", "~100%"))
+			layout {
+				xAxisLabel = "utilization"
+				yAxisLabel = label
+			}
+			bars {
+				y(listOf(30, 70, 90, 100).map {
+					utilization -> testResults.count { it.config.utilization == utilization && condition(it) }
+				})
+				width = 0.5
+				fillColor = Color.GREY
+				alpha = 0.3
+			}
+			bars {
+				y(listOf(30, 70, 90, 100).map {
+					utilization -> testResults.count {
+						it.config.utilization == utilization && condition(it) && (it.certainlyFeasible || it.certainlyInfeasible)
+					}
+				})
+			}
+		}.save(file)
+	}
+
+	fun numJobsBars(test: FeasibilityTest, label: String, file: String, condition: (FeasibilitySolverResult) -> Boolean) {
+		val testResults = results.mapNotNull { it.getAll()[test] }
+		plot {
+			x(listOf("40", "80", "300", "1000", "5000"))
+			layout {
+				xAxisLabel = "number of jobs"
+				yAxisLabel = label
+			}
+			bars {
+				y(listOf(40, 80, 300, 1000, 5000).map {
+						numJobs -> testResults.count { it.config.numJobs == numJobs && condition(it) }
+				})
+				width = 0.5
+				fillColor = Color.GREY
+				alpha = 0.3
+			}
+			bars {
+				y(listOf(40, 80, 300, 1000, 5000).map { numJobs-> testResults.count {
+					it.config.numJobs == numJobs && condition(it) && (it.certainlyFeasible || it.certainlyInfeasible)
+				} })
+			}
+		}.save(file)
+	}
+
+	fun numCoresBars(test: FeasibilityTest, label: String, file: String, condition: (FeasibilityCaseResult) -> Boolean) {
+		plot {
+			x(listOf("1", "2", "3", "4", "5"))
+			layout {
+				xAxisLabel = "number of cores"
+				yAxisLabel = label
+			}
+			bars {
+				y(listOf(1, 2, 3, 4, 5).map {
+						numCores -> results.count { it.config.numCores == numCores && condition(it) }
+				})
+				width = 0.5
+				fillColor = Color.GREY
+				alpha = 0.3
+			}
+			bars {
+				y(listOf(1, 2, 3, 4, 5).map { numCores -> results.count {
+					it.config.numCores == numCores && condition(it) && (it.getAll()[test]!!.certainlyFeasible || it.getAll()[test]!!.certainlyInfeasible)
+				} })
+			}
+		}.save(file)
+	}
+
+	fun durationBars(test: FeasibilityTest, label: String, file: String, condition: (FeasibilitySolverResult) -> Boolean) {
+		val testResults = results.mapNotNull { it.getAll()[test] }
+		plot {
+			x(listOf("5", "20", "100", "5000"))
+			layout {
+				xAxisLabel = "average job duration"
+				yAxisLabel = label
+			}
+			bars {
+				y(listOf(5, 20, 100, 5000).map {
+						duration -> testResults.count { it.config.jobLength == duration && condition(it) }
+				})
+				width = 0.5
+				fillColor = Color.GREY
+				alpha = 0.3
+			}
+			bars {
+				y(listOf(5, 20, 100, 5000).map { duration -> testResults.count {
+					it.config.jobLength == duration && condition(it) && (it.certainlyFeasible || it.certainlyInfeasible)
+				} })
+			}
+		}.save(file)
+	}
+
+	fun createUtilizationJobsMap(file: String, goodCondition: (FeasibilityCaseResult) -> Boolean, totalCondition: (FeasibilityCaseResult) -> Boolean) {
+		plot {
+			results.sortBy { it.config.utilization }
+			results.sortBy { it.config.numJobs }
+			val countMap = mutableMapOf<Pair<Int, Int>, Int>()
+			for (result in results.filter(totalCondition)) {
+				val key = Pair(result.config.utilization, result.config.numJobs)
+				countMap[key] = countMap.getOrDefault(key, 0) + 1
+			}
+			heatmap(
+				results.map { "${it.config.utilization}%" },
+				results.map { it.config.numJobs.toString() },
+				results.map { (if (totalCondition(it) && goodCondition(it)) 100.0 / countMap[Pair(it.config.utilization, it.config.numJobs)]!! else 0.0)  }
+			) {
+				x.axis.name = "utilization"
+				y.axis.name = "number of jobs"
+				fillColor(Stat.countWeighted) {
+					legend.name = "% of problems"
+					scale = continuous(domainMin = 0, domainMax = 101)
+				}
+			}
+		}.save(file)
+	}
+
+//	createUtilizationJobsMap("total-feasible-matrix.png", { it.certainlyFeasible }, { true })
+//	createUtilizationJobsMap("total-infeasible-matrix.png", { it.certainlyInfeasible }, { true })
+//	createUtilizationJobsMap("total-matrix.png", { it.certainlyFeasible || it.certainlyInfeasible }, { true })
+//	utilizationBars(FeasibilityTest.HEURISTIC, "number of solved problems", "heuristic-utilization-vs-solved.png") { true }
+//	numJobsBars(FeasibilityTest.HEURISTIC, "number of solved problems", "heuristic-jobs-vs-solved.png") { true }
+//	numCoresBars(FeasibilityTest.HEURISTIC, "number of solved problems", "heuristic-cores-vs-solved.png") { true }
+//	durationBars(FeasibilityTest.HEURISTIC, "number of solved problems", "heuristic-duration-vs-solved.png") { true }
+//	createUtilizationJobsMap("heuristic-feasible-matrix.png", { it.heuristicResult.certainlyFeasible }, { true })
+//	createUtilizationJobsMap("heuristic-infeasible-matrix.png", { it.heuristicResult.certainlyInfeasible }, { true })
+//	createUtilizationJobsMap("heuristic-matrix.png", {
+//		it.heuristicResult.certainlyFeasible || it.heuristicResult.certainlyInfeasible }, { true }
+//	)
+//	utilizationBars(FeasibilityTest.Z3_MODEL1, "number of solved problems", "z3-utilization-vs-solved.png") { true }
+//	numJobsBars(FeasibilityTest.Z3_MODEL1, "number of solved problems", "z3-jobs-vs-solved.png") { true }
+//	numCoresBars(FeasibilityTest.Z3_MODEL1, "number of solved problems", "z3-cores-vs-solved.png") { true }
+//	durationBars(FeasibilityTest.Z3_MODEL1, "number of solved problems", "z3-duration-vs-solved.png") { true }
+//	utilizationBars(FeasibilityTest.Z3_MODEL1, "number of solved problems", "z3-no-prec-utilization-vs-solved.png") { !it.config.precedence }
+//	numJobsBars(FeasibilityTest.Z3_MODEL1, "number of solved problems", "z3-no-prec-jobs-vs-solved.png") { !it.config.precedence }
+//	numCoresBars(FeasibilityTest.Z3_MODEL1, "number of solved problems", "z3-no-prec-cores-vs-solved.png") { !it.config.precedence }
+//	durationBars(FeasibilityTest.Z3_MODEL1, "number of solved problems", "z3-no-prec-duration-vs-solved.png") { !it.config.precedence }
+//	createUtilizationJobsMap("z3-feasible-matrix.png", { it.z3Result.certainlyFeasible }, { true })
+//	createUtilizationJobsMap("z3-infeasible-matrix.png", { it.z3Result.certainlyInfeasible }, { true })
+//	createUtilizationJobsMap("z3-matrix.png", {
+//		it.z3Result.certainlyFeasible || it.z3Result.certainlyInfeasible }, { true }
+//	)
+//	createUtilizationJobsMap("z3-no-prec-feasible-matrix.png", { it.z3Result.certainlyFeasible }, { !it.config.precedence })
+//	createUtilizationJobsMap("z3-no-prec-infeasible-matrix.png", { it.z3Result.certainlyInfeasible }, { !it.config.precedence })
+//	createUtilizationJobsMap("z3-no-prec-matrix.png", {
+//		it.z3Result.certainlyFeasible || it.z3Result.certainlyInfeasible }, { !it.config.precedence }
+//	)
+//	utilizationBars(FeasibilityTest.CPLEX, "number of solved problems", "cplex-utilization-vs-solved.png") { true }
+//	numJobsBars(FeasibilityTest.CPLEX, "number of solved problems", "cplex-jobs-vs-solved.png") { true }
+//	numCoresBars(FeasibilityTest.CPLEX, "number of solved problems", "cplex-cores-vs-solved.png") { true }
+//	numCoresBars(FeasibilityTest.CPLEX, "number of solved problems", "cplex-feasible-cores-vs-solved.png") { it.certainlyFeasible }
+//	numCoresBars(FeasibilityTest.CPLEX, "number of solved problems", "cplex-infeasible-cores-vs-solved.png") { it.certainlyInfeasible }
+//	durationBars(FeasibilityTest.CPLEX, "number of solved problems", "cplex-duration-vs-solved.png") { true }
+//	createUtilizationJobsMap("cplex-feasible-matrix.png", { it.cplexResult.certainlyFeasible }, { true })
+//	createUtilizationJobsMap("cplex-infeasible-matrix.png", { it.cplexResult.certainlyInfeasible }, { true })
+//	createUtilizationJobsMap("cplex-matrix.png", {
+//		it.cplexResult.certainlyFeasible || it.cplexResult.certainlyInfeasible }, { true }
+//	)
+
+	fun coresClassification(file: String, condition: (FeasibilitySolverResult) -> Boolean) {
+		val groupResults = results.flatMap { it.getAll().values }.filter(condition).sortedBy { it.config.numCores }
+		val data = mapOf(
+			"cores" to groupResults.map { it.config.numCores.toString() },
+			"solver" to groupResults.map { it.solver.name }
+		)
+		data.toDataFrame().groupBy("solver").plot {
+			countPlot("cores") {
+				fillColor("solver")
+				x.axis.name = "number of cores"
+				y.axis.name = "number of solved problems"
+			}
+		}.save(file)
+	}
+
+//	coresClassification("cores-vs-classification.png") { it.isSolved }
+//	coresClassification("only-prec-cores-vs-classification.png") { it.isSolved && it.config.precedence }
+//	coresClassification("no-prec-cores-vs-classification.png") { it.isSolved && !it.config.precedence }
+//	utilizationBars(FeasibilityTest.MINISAT, "number of solved problems", "minisat-utilization-vs-solved.png") { !it.config.precedence }
+//	numJobsBars(FeasibilityTest.MINISAT, "number of solved problems", "minisat-jobs-vs-solved.png") { !it.config.precedence }
+//	numCoresBars(FeasibilityTest.MINISAT, "number of solved problems", "minisat-cores-vs-solved.png") { !it.config.precedence }
+//	numCoresBars(FeasibilityTest.MINISAT, "number of solved problems", "minisat-feasible-cores-vs-solved.png") { it.certainlyFeasible && !it.config.precedence }
+//	numCoresBars(FeasibilityTest.MINISAT, "number of solved problems", "minisat-infeasible-cores-vs-solved.png") { it.certainlyInfeasible  && !it.config.precedence }
+//	durationBars(FeasibilityTest.MINISAT, "number of solved problems", "minisat-duration-vs-solved.png") { true }
+//	createUtilizationJobsMap("minisat-feasible-matrix.png", { it.minisatResult!!.certainlyFeasible }, { !it.config.precedence })
+//	createUtilizationJobsMap("minisat-infeasible-matrix.png", { it.minisatResult!!.certainlyInfeasible }, { !it.config.precedence })
+//	createUtilizationJobsMap("minisat-matrix.png", {
+//		it.minisatResult!!.certainlyFeasible || it.minisatResult!!.certainlyInfeasible }, { !it.config.precedence }
+//	)
 }

@@ -8,24 +8,35 @@ import java.nio.file.Files
 class FeasibilitySolverResult(
 	val solver: FeasibilityTest,
 	val config: FeasibilityConfig,
+	val passedLoadTest: Boolean,
 	val certainlyFeasible: Boolean,
 	val certainlyInfeasible: Boolean,
 	val spentSeconds: Double?,
 	val timedOut: Boolean,
+	val generationTimedOut: Boolean,
 	val processTimedOut: Boolean,
 ) {
+
+	val isSolved: Boolean
+		get() = certainlyFeasible || certainlyInfeasible
+
 	companion object {
 		fun parse(solver: FeasibilityTest, config: FeasibilityConfig, file: File): FeasibilitySolverResult {
 			var certainlyFeasible = false
 			var certainlyInfeasible = false
 			var timedOut = false
+			var generationTimedOut = false
 			var processTimedOut = false
 			var spentSeconds: Double? = null
+			var passedLoadTest = false
 			for (line in Files.lines(file.toPath())) {
 				if (line.contains("is feasible.")) certainlyFeasible = true
 				if (line.contains("is infeasible")) certainlyInfeasible = true
 				if (line.contains("process timed out")) processTimedOut = true
 				else if (line.contains("timed out")) timedOut = true
+				if (line.contains("The problem passed the necessary load-based feasibility test.")) passedLoadTest = true
+				if (line.contains("generation for minisat timed out")) generationTimedOut = true
+				if (line.contains("generation for z3 timed out")) generationTimedOut = true
 				val indexSeconds = line.indexOf(" seconds")
 				if (indexSeconds != -1) {
 					val startIndex = line.lastIndexOf(" ", indexSeconds - 1) + 1
@@ -34,13 +45,16 @@ class FeasibilitySolverResult(
 			}
 
 			if (timedOut && spentSeconds != null) throw Error("Failed to parse $file")
+			if (generationTimedOut && !timedOut) throw Error("Failed to parse $file")
 			return FeasibilitySolverResult(
 				solver,
 				config = config,
+				passedLoadTest = passedLoadTest,
 				certainlyFeasible = certainlyFeasible,
 				certainlyInfeasible = certainlyInfeasible,
 				spentSeconds,
 				timedOut = timedOut,
+				generationTimedOut = generationTimedOut,
 				processTimedOut = processTimedOut
 			)
 		}
