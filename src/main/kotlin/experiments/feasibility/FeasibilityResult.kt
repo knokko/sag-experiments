@@ -8,6 +8,7 @@ import java.nio.file.Files
 class FeasibilitySolverResult(
 	val solver: FeasibilityTest,
 	val config: FeasibilityConfig,
+	val failedBoundsTest: Boolean,
 	val passedLoadTest: Boolean,
 	val certainlyFeasible: Boolean,
 	val certainlyInfeasible: Boolean,
@@ -29,6 +30,7 @@ class FeasibilitySolverResult(
 			var processTimedOut = false
 			var spentSeconds: Double? = null
 			var passedLoadTest = false
+			var failedBoundsTest = false
 			for (line in Files.lines(file.toPath())) {
 				if (line.contains("is feasible.")) certainlyFeasible = true
 				if (line.contains("is infeasible")) certainlyInfeasible = true
@@ -37,6 +39,7 @@ class FeasibilitySolverResult(
 				if (line.contains("The problem passed the necessary load-based feasibility test.")) passedLoadTest = true
 				if (line.contains("generation for minisat timed out")) generationTimedOut = true
 				if (line.contains("generation for z3 timed out")) generationTimedOut = true
+				if (line.contains("The given problem is infeasible because a deadline will be missed")) failedBoundsTest = true
 				val indexSeconds = line.indexOf(" seconds")
 				if (indexSeconds != -1) {
 					val startIndex = line.lastIndexOf(" ", indexSeconds - 1) + 1
@@ -49,6 +52,7 @@ class FeasibilitySolverResult(
 			return FeasibilitySolverResult(
 				solver,
 				config = config,
+				failedBoundsTest = failedBoundsTest,
 				passedLoadTest = passedLoadTest,
 				certainlyFeasible = certainlyFeasible,
 				certainlyInfeasible = certainlyInfeasible,

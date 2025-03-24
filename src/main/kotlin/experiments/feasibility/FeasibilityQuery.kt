@@ -1,7 +1,6 @@
 package experiments.feasibility
 
-import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.kandy.dsl.categorical
 import org.jetbrains.kotlinx.kandy.dsl.continuous
 import org.jetbrains.kotlinx.kandy.dsl.plot
@@ -13,6 +12,7 @@ import org.jetbrains.kotlinx.kandy.letsplot.layers.bars
 import org.jetbrains.kotlinx.kandy.letsplot.x
 import org.jetbrains.kotlinx.kandy.letsplot.y
 import org.jetbrains.kotlinx.kandy.util.color.Color
+import org.jetbrains.kotlinx.statistics.kandy.layers.boxplot
 import org.jetbrains.kotlinx.statistics.kandy.layers.countPlot
 import org.jetbrains.kotlinx.statistics.kandy.layers.heatmap
 import java.io.File
@@ -47,7 +47,8 @@ fun main() {
 
 	println("base stats: out of the ${results.size} problems:")
 	println("${results.count { it.certainlyFeasible }} are certainly feasible")
-	println("${results.count { it.certainlyInfeasible }} are certainly infeasible")
+	println("${results.count { it.certainlyInfeasible }} are certainly infeasible, " +
+			"of which ${results.count { it.heuristicResult.failedBoundsTest }} failed the bounds test")
 	println("${results.count { !it.certainlyFeasible && !it.certainlyInfeasible }} are unsolved")
 	println()
 	for (numCores in 1 .. 5) {
@@ -450,4 +451,44 @@ fun main() {
 //	createUtilizationJobsMap("minisat-matrix.png", {
 //		it.minisatResult!!.certainlyFeasible || it.minisatResult!!.certainlyInfeasible }, { !it.config.precedence }
 //	)
+
+	run {
+		val sharedResults = results.filter {
+			it.heuristicResult.isSolved && it.z3Result.isSolved && it.cplexResult.isSolved && it.minisatResult?.isSolved == true && it.certainlyFeasible
+		}
+		dataFrameOf(
+			"heuristic" to sharedResults.map { it.heuristicResult.spentSeconds ?: 0.0 },
+			"Z3" to sharedResults.map { it.z3Result.spentSeconds ?: 0.0 },
+			"CPLEX" to sharedResults.map { it.cplexResult.spentSeconds ?: 0.0 },
+			"Minisat" to sharedResults.map { it.minisatResult!!.spentSeconds ?: 0.0 }
+		).gather("heuristic", "Z3", "CPLEX", "Minisat").into("solver", "execution time").plot {
+			boxplot("solver", "execution time")
+		}.save("spent-seconds-feasible.png")
+	}
+
+	run {
+		val sharedResults = results.filter {
+			it.heuristicResult.isSolved && it.z3Result.isSolved && it.cplexResult.isSolved &&
+					it.minisatResult?.isSolved == true && it.certainlyInfeasible && !it.heuristicResult.failedBoundsTest
+		}
+		dataFrameOf(
+			"Z3" to sharedResults.map { it.z3Result.spentSeconds ?: 0.0 },
+			"CPLEX" to sharedResults.map { it.cplexResult.spentSeconds ?: 0.0 },
+			"Minisat" to sharedResults.map { it.minisatResult!!.spentSeconds ?: 0.0 }
+		).gather("Z3", "CPLEX", "Minisat").into("solver", "execution time").plot {
+			boxplot("solver", "execution time")
+		}.save("spent-seconds-infeasible.png")
+	}
+
+	run {
+		for (solver in arrayOf(FeasibilityTest.HEURISTIC, FeasibilityTest.Z3_MODEL1, FeasibilityTest.CPLEX, FeasibilityTest.MINISAT)) {
+			dataFrameOf(
+				solver.name to results.mapNotNull { it.getAll()[solver] }.mapNotNull { it.spentSeconds }
+            ).gather(solver.name).into("solver", "execution time").plot {
+				boxplot("solver", "execution time")
+				layout.size = Pair(200, 300)
+				y.axis.max = 60.0
+			}.save("spent-seconds-${solver.name}.png")
+		}
+	}
 }
