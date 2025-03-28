@@ -41,7 +41,7 @@ class PouryaGeneratorConfig(
 		config.write(tempConfig)
 		tempConfig.deleteOnExit()
 
-		val maxJobs = arrayOf(3000, 1000, 10_000, 300, 30_000)
+		val maxJobs = arrayOf(3000, 1000, 10_000, 300, 30_000, 6000, 20_000, 100)
 		var maxJobIndex = 0
 		var timeout = 1
 
@@ -61,7 +61,7 @@ class PouryaGeneratorConfig(
 			config.write(tempConfig)
 
 			val process = Runtime.getRuntime().exec(arrayOf(GENERATOR.absolutePath, "-config", tempConfig.absolutePath))
-			if (process.waitFor(3, TimeUnit.SECONDS)) {
+			if (process.waitFor(timeout.toLong(), TimeUnit.SECONDS)) {
 				val jobSets = collect(tempConfig, tempJobsFolder, 1, numCores, addPrecedenceConstraints)
 				if (jobSets.size != 1) throw Error("What? $jobSets")
 				val jobSet = jobSets.iterator().next()
@@ -102,7 +102,7 @@ class PouryaGeneratorConfig(
 				if (timeout == 1) {
 					println("Increasing timeout for $outerFolder")
 					maxJobIndex = 0
-					timeout = 5
+					timeout = 10
 				} else {
 					println("failed to generate job set for $outerFolder with config $tempConfig")
 					return
