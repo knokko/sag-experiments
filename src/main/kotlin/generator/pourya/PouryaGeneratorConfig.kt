@@ -105,8 +105,8 @@ class PouryaGeneratorConfig(
 					timeout = 10
 				} else {
 					println("failed to generate job set for $outerFolder with config $tempConfig")
-					//return
 					remaining -= 1
+					maxJobIndex = 0
 				}
 			}
 			tempJobsFolder.deleteRecursively()
