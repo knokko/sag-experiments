@@ -12,10 +12,19 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.release>17</maven.compiler.release>
+    <maven.compiler.release>21</maven.compiler.release>
     <kotlin.version>2.1.10</kotlin.version>
+    <kotlin.compiler.languageVersion>2.1</kotlin.compiler.languageVersion>
+    <kotlin.compiler.apiVersion>2.1</kotlin.compiler.apiVersion>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
   </properties>
+
+  <repositories>
+    <repository>
+      <id>kotlin-ds</id>
+      <url>https://packages.jetbrains.team/maven/p/kds/kotlin-ds-maven</url>
+    </repository>
+  </repositories>
 
   <dependencyManagement>
     <dependencies>
@@ -35,6 +44,16 @@
   </dependencyManagement>
 
   <dependencies>
+    <dependency>
+      <groupId>org.jetbrains.kotlinx</groupId>
+      <artifactId>kandy-lets-plot</artifactId>
+      <version>0.8.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlinx</groupId>
+      <artifactId>kotlin-statistics-jvm</artifactId>
+      <version>0.4.0</version>
+    </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
@@ -61,7 +80,6 @@
 
   <build>
     <sourceDirectory>src/main/kotlin</sourceDirectory>
-    <testSourceDirectory>src/test/kotlin</testSourceDirectory>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
       <plugins>
         <plugin>
@@ -134,7 +152,7 @@
           </execution>
         </executions>
         <configuration>
-          <jvmTarget>1.8</jvmTarget>
+          <jvmTarget>21</jvmTarget>
         </configuration>
       </plugin>
       <plugin>
