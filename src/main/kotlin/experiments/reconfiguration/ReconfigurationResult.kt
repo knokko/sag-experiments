@@ -9,6 +9,8 @@ import java.util.*
 class ReconfigurationResult(
 	val folder: File,
 	val config: ReconfigurationConfig,
+	val rootRating: Double,
+	val rootVisiblySafe: Boolean,
 	val graphPath: ReconfigurationPathResult?,
 	val scratchPath: ReconfigurationPathResult?,
 ) {
@@ -69,8 +71,22 @@ class ReconfigurationResult(
 		fun parse(folder: File): ReconfigurationResult {
 			val config = ReconfigurationConfig.parse(folder)
 			val files = folder.listFiles()!!
+
 			val hasGraphPath = files.any { it.name == "rating-ordering.bin" }
 			val hasScratchPath = files.any { it.name == "scratch-ordering.bin" }
+
+			var rootRating: Double? = null
+			var rootVisiblySafe = true
+			files.find { it.name == "rating-job-ordering.out" }!!.forEachLine { line ->
+				val prefix = "and the rating of the root node is "
+				val ratingPrefix = line.indexOf(prefix)
+				if (ratingPrefix != -1) {
+					rootRating = parseDouble(line.substring(ratingPrefix + prefix.length, line.length - 1))
+					rootVisiblySafe = rootRating!! > 0.0
+				}
+				if (line == "Feasibility graph search timed out") rootVisiblySafe = false
+			}
+
 			val trials = mutableListOf<ReconfigurationTrialResult>()
 			for (pathType in PathType.entries) {
 				for (cutMethod in CutMethod.entries) {
@@ -85,7 +101,8 @@ class ReconfigurationResult(
 			val scratchResult = if (hasScratchPath) {
 				ReconfigurationPathResult(PathType.Scratch, config, trials.filter { it.pathType == PathType.Scratch })
 			} else null
-			return ReconfigurationResult(folder, config, graphResult, scratchResult)
+
+			return ReconfigurationResult(folder, config, rootRating!!, rootVisiblySafe, graphResult, scratchResult)
 		}
 	}
 }
@@ -115,22 +132,28 @@ class ReconfigurationTrialResult(
 	val minimizationMethod: MinimizationMethod
 )
 
-enum class PathType {
-	Rating,
-	Scratch
+enum class PathType(private val displayName: String) {
+	Rating("graph"),
+	Scratch("scratch");
+
+	override fun toString() = displayName
 }
 
-enum class CutMethod(val filePart: String) {
-	Traditional("traditional"),
-	SlowSafe("slow-safe"),
-	FastSafe("fast-safe"),
-	Instant("total")
+enum class CutMethod(val filePart: String, private val displayName: String) {
+	Traditional("traditional", "old"),
+	SlowSafe("slow-safe", "slow"),
+	FastSafe("fast-safe", "fast"),
+	Instant("total", "instant");
+
+	override fun toString() = displayName
 }
 
 enum class MinimizationMethod {
 	Random,
 	Tail,
-	Head
+	Head;
+
+	override fun toString() = name.lowercase(Locale.ROOT)
 }
 
 class ReconfigurationConfig(
