@@ -34,7 +34,7 @@ fun main() {
 					NP_TEST.absolutePath, File("$folder/jobs.csv").absolutePath,
 					"-p", File("$folder/precedence.csv").absolutePath, "-m", numCores.toString(),
 					"--reconfigure", "--reconfigure-load-job-ordering", jobOrderingFile.absolutePath,
-					"--reconfigure-enforce-timeout", "120", "--reconfigure-minimize-timeout", "120",
+					"--reconfigure-enforce-timeout", "240"
 				)
 				val process = Runtime.getRuntime().exec(baseArguments + reconfigurationTest.extraArguments)
 
