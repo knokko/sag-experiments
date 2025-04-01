@@ -8,9 +8,14 @@ import org.jetbrains.kotlinx.kandy.dsl.internal.dataframe.GroupByPlotBuilder
 import org.jetbrains.kotlinx.kandy.dsl.plot
 import org.jetbrains.kotlinx.kandy.letsplot.export.save
 import org.jetbrains.kotlinx.kandy.letsplot.layers.line
+import org.jetbrains.kotlinx.kandy.letsplot.style.LayoutParameters.Companion.line
 import org.jetbrains.kotlinx.kandy.letsplot.x
 import org.jetbrains.kotlinx.kandy.letsplot.y
+import org.jetbrains.kotlinx.statistics.kandy.layers.boxplot
 import org.jetbrains.kotlinx.statistics.kandy.layers.countPlot
+import org.jetbrains.kotlinx.statistics.kandy.layers.densityPlot
+import org.jetbrains.kotlinx.statistics.kandy.statplots.boxplot
+import org.jetbrains.kotlinx.statistics.kandy.statplots.densityPlot
 import java.io.File
 import java.util.*
 import java.util.concurrent.Executors
@@ -301,17 +306,17 @@ fun mainResults() {
 			}.save(fileName)
 		}
 
-		constraintsPlot(listOf(
-//			Combination(PathType.Rating, CutMethod.FastSafe, MinimizationMethod.Random, "graph fast"),
-			Combination(PathType.Rating, CutMethod.Instant, MinimizationMethod.Random, "graph"),
-//			Combination(PathType.Scratch, CutMethod.FastSafe, MinimizationMethod.Random, "scratch fast"),
-			Combination(PathType.Scratch, CutMethod.Instant, MinimizationMethod.Random, "scratch")
-		), "path-type instant constraints.png", { sharedResults ->
-			sharedResults.sortBy { it.trials.map { it.numExtraConstraints }.median() }
-		}, {
-			y.axis.min = 0
-			y.axis.max = 100
-		})
+//		constraintsPlot(listOf(
+////			Combination(PathType.Rating, CutMethod.FastSafe, MinimizationMethod.Random, "graph fast"),
+//			Combination(PathType.Rating, CutMethod.Instant, MinimizationMethod.Random, "graph"),
+////			Combination(PathType.Scratch, CutMethod.FastSafe, MinimizationMethod.Random, "scratch fast"),
+//			Combination(PathType.Scratch, CutMethod.Instant, MinimizationMethod.Random, "scratch")
+//		), "path-type instant constraints.png", { sharedResults ->
+//			sharedResults.sortBy { it.trials.map { it.numExtraConstraints }.median() }
+//		}, {
+//			y.axis.min = 0
+//			y.axis.max = 100
+//		})
 
 		fun timePlot(
 			combinations: List<Combination>, fileName: String,
@@ -359,50 +364,50 @@ fun mainResults() {
 		}
 
 		run {
-			val combinations = listOf(
-				Combination(PathType.Rating, CutMethod.FastSafe, MinimizationMethod.Random, "fast random"),
-				Combination(PathType.Rating, CutMethod.Instant, MinimizationMethod.Random, "instant random"),
-				Combination(PathType.Scratch, CutMethod.FastSafe, MinimizationMethod.Random, "fast random"),
-				Combination(PathType.Scratch, CutMethod.Instant, MinimizationMethod.Random, "instant random"),
-				Combination(PathType.Rating, CutMethod.FastSafe, MinimizationMethod.Tail, "fast tail"),
-				Combination(PathType.Rating, CutMethod.Instant, MinimizationMethod.Tail, "instant tail"),
-				Combination(PathType.Scratch, CutMethod.FastSafe, MinimizationMethod.Tail, "fast tail"),
-				Combination(PathType.Scratch, CutMethod.Instant, MinimizationMethod.Tail, "instant tail")
-			)
-			timePlot(combinations, "path-type and cut-method and minimization-method time short.png", { sharedResults ->
-				sharedResults.sortBy { it.trials.map { it.executionTime }.median() }
-			}, {
-				x.axis.min = 0
-				y.axis.min = 0
-				x.axis.max = 150
-				y.axis.max = 2
-			})
-			timePlot(combinations, "path-type and cut-method and minimization-method time medium.png", { sharedResults ->
-				sharedResults.sortBy { it.trials.map { it.executionTime }.median() }
-			}, {
-				x.axis.min = 150
-				y.axis.min = 0
-				x.axis.max = 270
-				y.axis.max = 60
-			})
-			timePlot(combinations, "path-type and cut-method and minimization-method time long.png", { sharedResults ->
-				sharedResults.sortBy { it.trials.map { it.executionTime }.median() }
-			}, {
-				x.axis.min = 270
-				y.axis.min = 60
-				x.axis.max = 300
-				y.axis.max = 240
-			})
-
-			constraintsPlot(combinations, "path-type and cut-method and minimization-method constraints short.png", {}, {
-				x.axis.max = 280
-				y.axis.min = 1
-				y.axis.max = 100
-			})
-			constraintsPlot(combinations, "path-type and cut-method and minimization-method constraints long.png", {}, {
-				x.axis.min = 280
-				y.axis.min = 1
-			})
+//			val combinations = listOf(
+//				Combination(PathType.Rating, CutMethod.FastSafe, MinimizationMethod.Random, "fast random"),
+//				Combination(PathType.Rating, CutMethod.Instant, MinimizationMethod.Random, "instant random"),
+//				Combination(PathType.Scratch, CutMethod.FastSafe, MinimizationMethod.Random, "fast random"),
+//				Combination(PathType.Scratch, CutMethod.Instant, MinimizationMethod.Random, "instant random"),
+//				Combination(PathType.Rating, CutMethod.FastSafe, MinimizationMethod.Tail, "fast tail"),
+//				Combination(PathType.Rating, CutMethod.Instant, MinimizationMethod.Tail, "instant tail"),
+//				Combination(PathType.Scratch, CutMethod.FastSafe, MinimizationMethod.Tail, "fast tail"),
+//				Combination(PathType.Scratch, CutMethod.Instant, MinimizationMethod.Tail, "instant tail")
+//			)
+//			timePlot(combinations, "path-type and cut-method and minimization-method time short.png", { sharedResults ->
+//				sharedResults.sortBy { it.trials.map { it.executionTime }.median() }
+//			}, {
+//				x.axis.min = 0
+//				y.axis.min = 0
+//				x.axis.max = 150
+//				y.axis.max = 2
+//			})
+//			timePlot(combinations, "path-type and cut-method and minimization-method time medium.png", { sharedResults ->
+//				sharedResults.sortBy { it.trials.map { it.executionTime }.median() }
+//			}, {
+//				x.axis.min = 150
+//				y.axis.min = 0
+//				x.axis.max = 270
+//				y.axis.max = 60
+//			})
+//			timePlot(combinations, "path-type and cut-method and minimization-method time long.png", { sharedResults ->
+//				sharedResults.sortBy { it.trials.map { it.executionTime }.median() }
+//			}, {
+//				x.axis.min = 270
+//				y.axis.min = 60
+//				x.axis.max = 300
+//				y.axis.max = 240
+//			})
+//
+//			constraintsPlot(combinations, "path-type and cut-method and minimization-method constraints short.png", {}, {
+//				x.axis.max = 280
+//				y.axis.min = 1
+//				y.axis.max = 100
+//			})
+//			constraintsPlot(combinations, "path-type and cut-method and minimization-method constraints long.png", {}, {
+//				x.axis.min = 280
+//				y.axis.min = 1
+//			})
 		}
 
 //		timePlot(listOf(
@@ -508,17 +513,17 @@ fun mainResults() {
 //			y.axis.min = 1
 //			y.axis.max = 200
 //		})
-		constraintsPlot(listOf(
-			Combination(PathType.Scratch, CutMethod.Instant, MinimizationMethod.Random, "scratch instant random"),
-			Combination(PathType.Scratch, CutMethod.Instant, MinimizationMethod.Tail, "scratch instant tail"),
-			Combination(PathType.Scratch, CutMethod.FastSafe, MinimizationMethod.Random, "scratch fast random"),
-			Combination(PathType.Scratch, CutMethod.FastSafe, MinimizationMethod.Tail, "scratch fast tail"),
-		), "scratch all cut-method minimization method constraints large.png", { sharedResults ->
-		}, {
-			x.axis.min = 640
-			y.axis.min = 1
-			x.axis.max = 700
-		})
+//		constraintsPlot(listOf(
+//			Combination(PathType.Scratch, CutMethod.Instant, MinimizationMethod.Random, "scratch instant random"),
+//			Combination(PathType.Scratch, CutMethod.Instant, MinimizationMethod.Tail, "scratch instant tail"),
+//			Combination(PathType.Scratch, CutMethod.FastSafe, MinimizationMethod.Random, "scratch fast random"),
+//			Combination(PathType.Scratch, CutMethod.FastSafe, MinimizationMethod.Tail, "scratch fast tail"),
+//		), "scratch all cut-method minimization method constraints large.png", { sharedResults ->
+//		}, {
+//			x.axis.min = 640
+//			y.axis.min = 1
+//			x.axis.max = 700
+//		})
 	}
 
 	// Compare PathType, CutMethod, and MinimizationMethod at the same time
@@ -626,4 +631,119 @@ fun mainResults() {
 //			y.axis.min = 0
 //		}.save("path-type and cut-method and minimization-method time.png")
 //	}
+//	for (threshold in arrayOf(0.01, 0.03, 0.1)) {
+//		println("${results.count { it.rootRating >= threshold && it.scratchPath != null }} root ratings were " +
+//				"at least $threshold of which ${results.count {
+//					it.rootRating >= threshold && it.rootVisiblySafe && it.scratchPath != null }} visibly safe")
+//	}
+//	dataFrameOf(
+//		"root rating" to results.map { it.rootRating }
+//	).plot {
+//		boxplot("root rating")
+//	}.save("root ratings.png")
+	run {
+		val sharedResults = results.filter { it.graphPath != null }.toMutableList()
+		sharedResults.sortBy { problem ->
+			problem.trials.map { it.executionTime }.median()
+		}
+		val dataset = dataFrameOf(
+			"problem" to List (2 * sharedResults.size) { index -> index % sharedResults.size },
+			"job ordering" to List(sharedResults.size) { "graph" } + List(sharedResults.size) { "scratch" },
+			"time" to sharedResults.map { problem -> problem.graphPath!!.trials.map { it.executionTime }.median() } +
+					sharedResults.map { problem -> problem.scratchPath!!.trials.map { it.executionTime }.median() }
+		)
+		dataset.groupBy("job ordering").plot {
+			line {
+				x("problem")
+				y("time")
+				color("job ordering")
+			}
+			x.axis.min = 0
+			y.axis.min = 0
+			x.axis.max = 200
+			y.axis.max = 20
+		}.save("path type short.png")
+		dataset.groupBy("job ordering").plot {
+			line {
+				x("problem")
+				y("time")
+				color("job ordering")
+			}
+			x.axis.min = 200
+			y.axis.min = 0
+		}.save("path type long.png")
+
+		val goodDataset = dataFrameOf(
+			"problem" to List (2 * sharedResults.size) { index -> index % sharedResults.size },
+			"job ordering" to List(sharedResults.size) { "graph" } + List(sharedResults.size) { "scratch" },
+			"time" to sharedResults.map {
+				problem -> problem.graphPath!!.trials.filter {
+					it.cutMethod == CutMethod.Instant
+				}.map { it.executionTime }.median()
+			} + sharedResults.map {
+				problem -> problem.scratchPath!!.trials.filter {
+					it.cutMethod == CutMethod.Instant
+				}.map { it.executionTime }.median()
+			}
+		)
+		goodDataset.groupBy("job ordering").plot {
+			line {
+				x("problem")
+				y("time")
+				color("job ordering")
+			}
+			x.axis.min = 0
+			y.axis.min = 0
+			x.axis.max = 200
+			y.axis.max = 10
+		}.save("path type good-cut short.png")
+		goodDataset.groupBy("job ordering").plot {
+			line {
+				x("problem")
+				y("time")
+				color("job ordering")
+			}
+			x.axis.min = 200
+			y.axis.min = 0
+		}.save("path type good-cut long.png")
+	}
+
+	for (cutMethod in CutMethod.entries) {
+		val sharedResults = results.filter { problem ->
+			problem.graphPath != null && problem.paths.all {
+				path -> path.trials.any { it.cutMethod == cutMethod }
+			}
+		}.toMutableList()
+		sharedResults.sortBy { problem ->
+			problem.trials.filter { it.cutMethod == cutMethod }.map { it.executionTime }.median()
+		}
+		val dataset = dataFrameOf(
+			"problem" to List (2 * sharedResults.size) { index -> index % sharedResults.size },
+			"job ordering" to List(sharedResults.size) { "graph" } + List(sharedResults.size) { "scratch" },
+			"time" to sharedResults.map { problem -> problem.graphPath!!.trials.filter {
+						it.cutMethod == cutMethod
+					}.map { it.executionTime }.median() } +
+					sharedResults.map { problem -> problem.scratchPath!!.trials.filter {
+						it.cutMethod == cutMethod
+					}.map { it.executionTime }.median() }
+		)
+		dataset.groupBy("job ordering").plot {
+			line {
+				x("problem")
+				y("time")
+				color("job ordering")
+			}
+			x.axis.min = 0
+			y.axis.min = 0
+		}.save("path type $cutMethod time.png")
+		dataset.groupBy("job ordering").plot {
+			line {
+				x("problem")
+				y("time")
+				color("job ordering")
+			}
+			x.axis.min = 0
+			y.axis.min = 0
+		}.save("path type $cutMethod time.png")
+	}
 }
