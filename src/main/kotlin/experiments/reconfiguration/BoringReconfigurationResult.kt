@@ -2,10 +2,10 @@ package experiments.reconfiguration
 
 import java.io.File
 
-enum class BoringReconfigurationResult {
-	TimedOut,
-	CertainlySchedulable,
-	CertainlyInfeasible;
+enum class BoringReconfigurationResult(val displayName: String) {
+	TimedOut("early timeout"),
+	CertainlySchedulable("already schedulable"),
+	CertainlyInfeasible("certainly infeasible");
 
 	companion object {
 		fun parse(folder: File): BoringReconfigurationResult {

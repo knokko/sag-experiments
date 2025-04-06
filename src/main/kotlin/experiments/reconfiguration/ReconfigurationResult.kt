@@ -29,13 +29,18 @@ class ReconfigurationResult(
 
 			var numExplorations = 0
 			var numSchedulableExplorations = 0
+			val explorationTimes = mutableListOf<Double>()
 			var executionTime: Double? = null
 			var peakMemory: Int? = null
 			var numExtraConstraints: Int? = null
+			var originalExtraConstraints: Int? = null
 			Files.lines(file.toPath()).forEach { line ->
 				if (line.contains("intermediate exploration")) {
 					numExplorations += 1
 					if (line.contains("schedulable? 1")) numSchedulableExplorations += 1
+					val indexTime = line.indexOf("time: ")
+					val endIndex = line.indexOf(' ', indexTime + 6)
+					explorationTimes.add(parseDouble(line.substring(indexTime + 6, endIndex)))
 				}
 				if (line.contains("remain after trial & error")) {
 					numExtraConstraints = parseInt(line.substring(0, line.indexOf(" remain")).trim())
@@ -52,6 +57,9 @@ class ReconfigurationResult(
 						parseInt(line.substring(startIndex, endIndex))
 					}
 				}
+				if (line.endsWith(" dispatch ordering constraints were added, let's try to minimize that...")) {
+					originalExtraConstraints = parseInt(line.substring(0, line.indexOf(' ')))
+				}
 			}
 
 			if (executionTime == null) return
@@ -61,6 +69,8 @@ class ReconfigurationResult(
 				peakMemory = peakMemory!!,
 				numExplorations = numExplorations,
 				numSchedulableExplorations = numSchedulableExplorations,
+				originalExtraConstraints = originalExtraConstraints!!,
+				explorationTimes = explorationTimes,
 				config = config,
 				pathType = pathType,
 				cutMethod = cutMethod,
@@ -77,6 +87,7 @@ class ReconfigurationResult(
 
 			var rootRating: Double? = null
 			var rootVisiblySafe = true
+			var graphConstructionTime: Double? = null
 			files.find { it.name == "rating-job-ordering.out" }!!.forEachLine { line ->
 				val prefix = "and the rating of the root node is "
 				val ratingPrefix = line.indexOf(prefix)
@@ -85,6 +96,20 @@ class ReconfigurationResult(
 					rootVisiblySafe = rootRating!! > 0.0
 				}
 				if (line == "Feasibility graph search timed out") rootVisiblySafe = false
+				val indexTime = line.indexOf("time: ")
+				if (indexTime != -1) {
+					val endIndex = line.indexOf(' ', indexTime + 6)
+					graphConstructionTime = parseDouble(line.substring(indexTime + 6, endIndex))
+				}
+			}
+
+			var scratchConstructionTime: Double? = null
+			files.find { it.name == "scratch-job-ordering.out" }!!.forEachLine { line ->
+				val prefix = "I found a safe job ordering after "
+				if (line.startsWith(prefix)) {
+					val endIndex = line.indexOf(' ', prefix.length)
+					scratchConstructionTime = parseDouble(line.substring(prefix.length, endIndex))
+				}
 			}
 
 			val trials = mutableListOf<ReconfigurationTrialResult>()
@@ -96,10 +121,10 @@ class ReconfigurationResult(
 				}
 			}
 			val graphResult = if (hasGraphPath) {
-				ReconfigurationPathResult(PathType.Rating, config, trials.filter { it.pathType == PathType.Rating })
+				ReconfigurationPathResult(PathType.Rating, config, graphConstructionTime!!, trials.filter { it.pathType == PathType.Rating })
 			} else null
 			val scratchResult = if (hasScratchPath) {
-				ReconfigurationPathResult(PathType.Scratch, config, trials.filter { it.pathType == PathType.Scratch })
+				ReconfigurationPathResult(PathType.Scratch, config, scratchConstructionTime!!, trials.filter { it.pathType == PathType.Scratch })
 			} else null
 
 			return ReconfigurationResult(folder, config, rootRating!!, rootVisiblySafe, graphResult, scratchResult)
@@ -110,6 +135,7 @@ class ReconfigurationResult(
 class ReconfigurationPathResult(
 	val type: PathType,
 	val config: ReconfigurationConfig,
+	val pathConstructionTime: Double,
 	val trials: List<ReconfigurationTrialResult>
 )
 
@@ -125,6 +151,8 @@ class ReconfigurationTrialResult(
 	val peakMemory: Int,
 	val numExplorations: Int,
 	val numSchedulableExplorations: Int,
+	val originalExtraConstraints: Int,
+	val explorationTimes: List<Double>,
 
 	val config: ReconfigurationConfig,
 	val pathType: PathType,
@@ -164,6 +192,8 @@ class ReconfigurationConfig(
 	val jitter: Int,
 	val precedence: Boolean,
 ) {
+	val isBase = numJobs == 1000 && numTasks == 4 && utilization == 60 && numCores == 3 && jitter == 20
+
 	companion object {
 		fun parse(folder: File): ReconfigurationConfig {
 			val numJobs = run {

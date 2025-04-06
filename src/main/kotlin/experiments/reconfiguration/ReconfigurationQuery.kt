@@ -76,6 +76,46 @@ fun mainResults() {
 				output
 			})
 		}.save("path-type and cut-method finish.png")
+
+
+	}
+
+	run {
+		plot {
+			countPlot(results.flatMap { problem ->
+				val output = mutableListOf<String>()
+				for (pathType in PathType.entries) {
+					if (problem.trials.any { it.pathType == pathType }) {
+						output.add(pathType.toString())
+					}
+				}
+				output
+			})
+		}.save("path-type finish.png")
+
+		plot {
+			countPlot(results.flatMap { problem ->
+				val output = mutableListOf<String>()
+				for (cutMethod in CutMethod.entries) {
+					if (problem.trials.any { it.cutMethod == cutMethod }) {
+						output.add(cutMethod.toString())
+					}
+				}
+				output
+			})
+		}.save("cut-method finish.png")
+
+		plot {
+			countPlot(results.flatMap { problem ->
+				val output = mutableListOf<String>()
+				for (method in MinimizationMethod.entries) {
+					if (problem.trials.any { it.minimizationMethod == method }) {
+						output.add(method.toString())
+					}
+				}
+				output
+			})
+		}.save("minimization-method finish.png")
 	}
 
 	// Compare PathType and MinimizationMethod success counts
