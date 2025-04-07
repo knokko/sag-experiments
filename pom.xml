@@ -149,7 +149,7 @@
             <configuration>
               <archive>
                 <manifest>
-                  <mainClass>experiments.feasibility.FeasibilityExperimentRunnerKt</mainClass>
+                  <mainClass>experiments.jobs.JobExperimentRunnerKt</mainClass>
                 </manifest>
               </archive>
               <descriptorRefs>
