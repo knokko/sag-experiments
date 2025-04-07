@@ -42,11 +42,12 @@ fun main() {
 	println("only solved by rating: ${results.count { it.graphPath != null && it.scratchPath == null }}")
 	println("${results.count { it.rootRating > 0.0 }} positive root ratings, ${results.count { it.rootVisiblySafe }} roots visibly safe")
 
-	fun pathData(sortByTime: Boolean, condition: (ReconfigurationTrialResult) -> Boolean): DataFrame<*> {
+	fun pathData(sortByTime: Boolean, applyCandidateFilter: Boolean = true, condition: (ReconfigurationTrialResult) -> Boolean): DataFrame<*> {
 		val sharedResults = results.filter { problem ->
-			PathType.entries.all { path -> problem.trials.any { it.pathType == path && condition(it) } }
+			if (!applyCandidateFilter) problem.trials.isNotEmpty()
+			else PathType.entries.all { path -> problem.trials.any { it.pathType == path && condition(it) } }
 		}.sortedBy { problem ->
-			problem.trials.filter(condition).map {
+			problem.trials.filter(if (applyCandidateFilter) condition else { _ -> true }).map {
 				if (sortByTime) it.executionTime else it.numExtraConstraints.toDouble()
 			}.median()
 		}
@@ -57,6 +58,7 @@ fun main() {
 		val ratings = mutableListOf<Double>()
 		val numConstraints = mutableListOf<Int>()
 		val time = mutableListOf<Double>()
+		val numJobs = mutableListOf<String>()
 		for ((index, problem) in sharedResults.withIndex()) {
 			for (trial in problem.trials.filter(condition).shuffled()) {
 				paths.add(trial.pathType.toString())
@@ -65,6 +67,7 @@ fun main() {
 				cutMethods.add(trial.cutMethod.toString())
 				numConstraints.add(trial.numExtraConstraints)
 				time.add(trial.executionTime)
+				numJobs.add(trial.config.numJobs.toString())
 			}
 		}
 
@@ -74,7 +77,8 @@ fun main() {
 			"rating" to ratings,
 			"cut method" to cutMethods,
 			"#constraints" to numConstraints,
-			"time" to time
+			"time" to time,
+			"#jobs" to numJobs
 		)
 	}
 
@@ -83,7 +87,7 @@ fun main() {
 			if (!applyCandidateFilter) problem.trials.isNotEmpty()
 			else candidates.all { method -> problem.trials.any { it.cutMethod == method && condition(it) } }
 		}.sortedBy { problem ->
-			problem.trials.filter(if (applyCandidateFilter) condition else { trial -> true }).filter { candidates.contains(it.cutMethod) }.map {
+			problem.trials.filter(if (applyCandidateFilter) condition else { _ -> true }).filter { candidates.contains(it.cutMethod) }.map {
 				if (sortByTime == true) it.executionTime
 				else if (sortByTime == false) it.numExtraConstraints.toDouble()
 				else it.originalExtraConstraints.toDouble()
@@ -135,11 +139,12 @@ fun main() {
 		)
 	}
 
-	fun minimizationData(sortByTime: Boolean, candidates: List<MinimizationMethod> = MinimizationMethod.entries, condition: (ReconfigurationTrialResult) -> Boolean): DataFrame<*> {
+	fun minimizationData(sortByTime: Boolean, candidates: List<MinimizationMethod> = MinimizationMethod.entries, applyCandidateFilter: Boolean = true, condition: (ReconfigurationTrialResult) -> Boolean): DataFrame<*> {
 		val sharedResults = results.filter { problem ->
-			candidates.all { method -> problem.trials.any { it.minimizationMethod == method && condition(it) } }
+			if (!applyCandidateFilter) problem.trials.isNotEmpty()
+			else candidates.all { method -> problem.trials.any { it.minimizationMethod == method && condition(it) } }
 		}.sortedBy { problem ->
-			problem.trials.filter(condition).filter { candidates.contains(it.minimizationMethod) }.map {
+			problem.trials.filter(if (applyCandidateFilter) condition else { _ -> true }).filter { candidates.contains(it.minimizationMethod) }.map {
 				if (sortByTime) it.executionTime else it.numExtraConstraints.toDouble()
 			}.median()
 		}
@@ -149,6 +154,7 @@ fun main() {
 		val problems = mutableListOf<Int>()
 		val numConstraints = mutableListOf<Int>()
 		val time = mutableListOf<Double>()
+		val numJobs = mutableListOf<String>()
 		for ((index, problem) in sharedResults.withIndex()) {
 			for (trial in problem.trials.filter(condition).filter { candidates.contains(it.minimizationMethod) }.shuffled()) {
 				methods.add(trial.minimizationMethod.toString())
@@ -156,6 +162,7 @@ fun main() {
 				problems.add(index)
 				numConstraints.add(trial.numExtraConstraints)
 				time.add(trial.executionTime)
+				numJobs.add(trial.config.numJobs.toString())
 			}
 		}
 
@@ -164,7 +171,8 @@ fun main() {
 			"job ordering" to paths,
 			"problem" to problems,
 			"#constraints" to numConstraints,
-			"time" to time
+			"time" to time,
+			"#jobs" to numJobs
 		)
 	}
 
@@ -259,15 +267,36 @@ fun main() {
 //		}
 //	}.save("v2/cut-method final constraints.png")
 
-//	cutData(false) { it.config.isBase || it.config.numJobs != 1000 }.sortBy("#jobs").groupBy("method").plot {
+//	cutData(false) { it.config.isBase || it.config.numJobs != 1000 }.groupBy("method").plot {
 //		boxplot("#jobs", "#constraints")
 //	}.save("v2/cut-method jobs constraints.png")
-//	cutData(true) { it.config.isBase || it.config.numJobs != 1000 }.sortBy("#jobs").groupBy("method").plot {
+//	cutData(true) { it.config.isBase || it.config.numJobs != 1000 }.groupBy("method").plot {
 //		boxplot("#jobs", "time")
 //	}.save("v2/cut-method jobs time.png")
-//	cutData(true, applyCandidateFilter = false) { it.config.isBase || it.config.numJobs != 1000 }.sortBy("#jobs").groupBy("method").plot {
+	cutData(true, applyCandidateFilter = false) { it.config.isBase || it.config.numJobs != 1000 }.groupBy("precedence?").plot {
+		countPlot("#jobs")
+	}.save("v2/cut-method jobs precedence finish.png")
+
+//	pathData(false) { it.config.isBase || it.config.numJobs != 1000 }.groupBy("job ordering").plot {
+//		boxplot("#jobs", "#constraints")
+//	}.save("v2/path-type jobs constraints.png")
+//	pathData(true) { it.config.isBase || it.config.numJobs != 1000 }.groupBy("job ordering").plot {
+//		boxplot("#jobs", "time")
+//	}.save("v2/path-type jobs time.png")
+//	pathData(true, applyCandidateFilter = false) { it.config.isBase || it.config.numJobs != 1000 }.groupBy("job ordering").plot {
 //		countPlot("#jobs")
-//	}.save("v2/cut-method jobs finish.png")
+//	}.save("v2/path-type jobs finish.png")
+
+//	minimizationData(false) { it.config.isBase || it.config.numJobs != 1000 }.groupBy("method").plot {
+//		boxplot("#jobs", "#constraints")
+//	}.save("v2/minimization-method jobs constraints.png")
+//	minimizationData(true) { it.config.isBase || it.config.numJobs != 1000 }.groupBy("method").plot {
+//		boxplot("#jobs", "time")
+//	}.save("v2/minimization-method jobs time.png")
+//	minimizationData(true, applyCandidateFilter = false) { it.config.isBase || it.config.numJobs != 1000 }.groupBy("method").plot {
+//		countPlot("#jobs")
+//	}.save("v2/minimization-method jobs finish.png")
+
 //
 //	cutData(false) { it.config.isBase || it.config.numTasks != 4 }.sortBy("#tasks").groupBy("method").plot {
 //		boxplot("#tasks", "#constraints")
