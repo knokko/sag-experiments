@@ -23,6 +23,8 @@ fun main() {
 fun reconfigurations() {
 	val numJobsToTimeOutsFast = mutableListOf<Int>()
 	val numJobsToTimeOutsInstant = mutableListOf<Int>()
+
+	val prefix = "threaded-"
 	val data = run {
 		val caseColumn = mutableListOf<Int>()
 		val jobsColumn = mutableListOf<Int>()
@@ -34,10 +36,10 @@ fun reconfigurations() {
 		val timedOutColumn = mutableListOf<Boolean>()
 
 		for (case in 0 until 500) {
-			val jobsFile = File("job-experiments/jobset-log-uniform_$case.csv")
+			val jobsFile = File("${prefix}job-experiments/jobset-log-uniform_$case.csv")
 			val numJobs = jobsFile.readLines().size - 1
-			val fastFile = File("job-experiments/output$case-fast.log")
-			val instantFile = File("job-experiments/output$case-instant.log")
+			val fastFile = File("${prefix}job-experiments/output$case-fast.log")
+			val instantFile = File("${prefix}job-experiments/output$case-instant.log")
 			if (fastFile.exists() != instantFile.exists()) {
 				throw RuntimeException("Check case $case")
 			}
@@ -67,7 +69,7 @@ fun reconfigurations() {
 					}
 				}
 
-				val excludeIfOneFailed = true
+				val excludeIfOneFailed = false
 				if (excludeIfOneFailed && remainingConstraints == -1) {
 					if (methodName == "instant" && caseColumn.size % 2 == 1) {
 						caseColumn.removeLast()
@@ -118,78 +120,78 @@ fun reconfigurations() {
 //			y.axis.min = 0
 //			y.axis.max = 60
 //		}
-//	}.save("v3/jobs distribution.png")
-	data.shuffle().groupBy("method").plot {
-		points {
-			x("#jobs")
-			y("time")
-			color("method")
-			size = 2.0
-		}
-	}.save("v3/jobs vs time.png")
-	data.shuffle().groupBy("method").plot {
-		points {
-			x("#jobs")
-			y("#explorations")
-			color("method")
-			y.axis.min = 1
-			size = 2.0
-		}
-	}.save("v3/jobs vs explorations.png")
-	data.shuffle().groupBy("method").plot {
-		points {
-			x("#jobs")
-			y("#constraints")
-			color("method")
-			size = 2.0
-			y.axis.min = 1
-		}
-	}.save("v3/jobs vs constraints.png")
-	data.shuffle().groupBy("method").plot {
-		points {
-			x("#jobs")
-			y("sqrt(time)")
-			color("method")
-			size = 2.0
-		}
-	}.save("v3/jobs vs sqrt time.png")
+//	}.save("v3/${prefix}jobs distribution.png")
+//	data.shuffle().groupBy("method").plot {
+//		points {
+//			x("#jobs")
+//			y("time")
+//			color("method")
+//			size = 2.0
+//		}
+//	}.save("v3/${prefix}jobs vs time.png")
+//	data.shuffle().groupBy("method").plot {
+//		points {
+//			x("#jobs")
+//			y("#explorations")
+//			color("method")
+//			y.axis.min = 1
+//			size = 2.0
+//		}
+//	}.save("v3/${prefix}jobs vs explorations.png")
+//	data.shuffle().groupBy("method").plot {
+//		points {
+//			x("#jobs")
+//			y("#constraints")
+//			color("method")
+//			size = 2.0
+//			y.axis.min = 1
+//		}
+//	}.save("v3/${prefix}jobs vs constraints.png")
+//	data.shuffle().groupBy("method").plot {
+//		points {
+//			x("#jobs")
+//			y("sqrt(time)")
+//			color("method")
+//			size = 2.0
+//		}
+//	}.save("v3/${prefix}jobs vs sqrt time.png")
 //	data.filterBy("timed out").plot {
 //		countPlot("method") {
 //			y.axis.name = "#time outs"
 //		}
-//	}.save("v3/method timeout.png")
-//	data.filterBy("timed out").groupBy("method").plot {
-//		histogram("#jobs", binsOption = BinsOption.byWidth(2000.0)) {
-//			x.axis.min = 0
-//			x.axis.max = 20000
-//			y.axis.min = 0
-//			y.axis.max = 60
-//			y.axis.name = "#time-outs"
-//		}
-//	}.save("v3/method jobs timeout.png")
+//	}.save("v3/${prefix}method timeout.png")
+	data.filterBy("timed out").groupBy("method").plot {
+		histogram("#jobs", binsOption = BinsOption.byWidth(2000.0)) {
+			x.axis.min = 0
+			x.axis.max = 20000
+			y.axis.min = 0
+			y.axis.max = 60
+			y.axis.name = "#time-outs"
+		}
+	}.save("v3/${prefix}method jobs timeout.png")
 
-//	val massJobsToTimeOutsFast = IntArray(numJobsToTimeOutsFast.size)
-//	val massJobsToTimeOutsInstant = IntArray(numJobsToTimeOutsInstant.size)
-//	for ((startIndex, count) in numJobsToTimeOutsFast.withIndex()) {
-//		for (index in startIndex until massJobsToTimeOutsFast.size) massJobsToTimeOutsFast[index] += count
-//	}
-//	for ((startIndex, count) in numJobsToTimeOutsInstant.withIndex()) {
-//		for (index in startIndex until massJobsToTimeOutsInstant.size) massJobsToTimeOutsInstant[index] += count
-//	}
-//	val massData = dataFrameOf(
-//		"#jobs" to List(numJobsToTimeOutsInstant.size * 2) { index -> index % numJobsToTimeOutsInstant.size },
-//		"method" to List(numJobsToTimeOutsInstant.size) { "instant" } + List(numJobsToTimeOutsFast.size) { "fast" },
-//		"#timeouts" to (massJobsToTimeOutsInstant + massJobsToTimeOutsFast).toList()
-//	)
-//	massData.groupBy("method").plot {
-//		line {
-//			x("#jobs")
-//			y("#timeouts")
-//			color("method")
-//			x.axis.name = "X: the number of jobs"
-//			y.axis.name = "#time-outs for at most X jobs"
-//		}
-//	}.save("v3/jobs vs timeouts.png")
+	val massJobsToTimeOutsFast = IntArray(numJobsToTimeOutsFast.size)
+	val massJobsToTimeOutsInstant = IntArray(numJobsToTimeOutsInstant.size)
+	for ((startIndex, count) in numJobsToTimeOutsFast.withIndex()) {
+		for (index in startIndex until massJobsToTimeOutsFast.size) massJobsToTimeOutsFast[index] += count
+	}
+	for ((startIndex, count) in numJobsToTimeOutsInstant.withIndex()) {
+		for (index in startIndex until massJobsToTimeOutsInstant.size) massJobsToTimeOutsInstant[index] += count
+	}
+	val massData = dataFrameOf(
+		"#jobs" to List(numJobsToTimeOutsInstant.size * 2) { index -> index % numJobsToTimeOutsInstant.size },
+		"method" to List(numJobsToTimeOutsInstant.size) { "instant" } + List(numJobsToTimeOutsFast.size) { "fast" },
+		"#timeouts" to (massJobsToTimeOutsInstant + massJobsToTimeOutsFast).toList()
+	)
+	massData.groupBy("method").plot {
+		line {
+			x("#jobs")
+			y("#timeouts")
+			color("method")
+			x.axis.name = "X: the number of jobs"
+			y.axis.name = "#time-outs for at most X jobs"
+		}
+	}.save("v3/${prefix}jobs vs timeouts.png")
 }
 
 fun alreadySchedulable() {

@@ -4,6 +4,7 @@
     <content url="file://$MODULE_DIR$" dumb="true">
       <excludeFolder url="file://$MODULE_DIR$/feasibility-results-old" />
       <excludeFolder url="file://$MODULE_DIR$/lets-plot-images" />
+      <excludeFolder url="file://$MODULE_DIR$/job-experiments" />
     </content>
   </component>
 </module>
