@@ -203,25 +203,25 @@ fun main() {
 //		results.count { it.z3Result.certainlyFeasible },
 //		results.count { it.cplexResult.certainlyFeasible },
 //		results.count { it.minisatResult?.certainlyFeasible == true }
-//	), "number of problems solved", "feasible-problems-vs-solvers.png")
+//	), "number of problems identified", "feasible-problems-vs-solvers.png")
 //	solverBars(results.count { it.certainlyInfeasible }, listOf(
 //		results.count { it.heuristicResult.certainlyInfeasible },
 //		results.count { it.z3Result.certainlyInfeasible },
 //		results.count { it.cplexResult.certainlyInfeasible },
 //		results.count { it.minisatResult?.certainlyInfeasible == true }
-//	), "number of problems solved", "infeasible-problems-vs-solvers.png")
+//	), "number of problems identified", "infeasible-problems-vs-solvers.png")
 //	solverBars(results.count { !it.config.precedence && it.certainlyFeasible }, listOf(
 //		results.count { !it.config.precedence && it.heuristicResult.certainlyFeasible },
 //		results.count { !it.config.precedence && it.z3Result.certainlyFeasible },
 //		results.count { !it.config.precedence && it.cplexResult.certainlyFeasible },
 //		results.count { !it.config.precedence && it.minisatResult?.certainlyFeasible == true }
-//	), "number of problems solved", "no-prec-feasible-problems-vs-solvers.png")
+//	), "number of problems identified", "no-prec-feasible-problems-vs-solvers.png")
 //	solverBars(results.count { !it.config.precedence && it.certainlyInfeasible }, listOf(
 //		results.count { !it.config.precedence && it.heuristicResult.certainlyInfeasible },
 //		results.count { !it.config.precedence && it.z3Result.certainlyInfeasible },
 //		results.count { !it.config.precedence && it.cplexResult.certainlyInfeasible },
 //		results.count { !it.config.precedence && it.minisatResult?.certainlyInfeasible == true }
-//	), "number of problems solved", "no-prec-infeasible-problems-vs-solvers.png")
+//	), "number of problems identified", "no-prec-infeasible-problems-vs-solvers.png")
 //	solverBars(results.count { !it.config.precedence && it.certainlyInfeasible && it.config.jobLength <= 20 && it.config.utilization == 90 }, listOf(
 //		results.count { !it.config.precedence && it.heuristicResult.certainlyInfeasible && it.config.jobLength <= 20 && it.config.utilization == 90 },
 //		results.count { !it.config.precedence && it.z3Result.certainlyInfeasible && it.config.jobLength <= 20 && it.config.utilization == 90 },
