@@ -176,12 +176,12 @@ enum class CutMethod(val filePart: String, private val displayName: String) {
 	override fun toString() = displayName
 }
 
-enum class MinimizationMethod {
-	Random,
-	Tail,
-	Head;
+enum class MinimizationMethod(private val plotName: String) {
+	Random("random"),
+	Tail("late"),
+	Head("early");
 
-	override fun toString() = name.lowercase(Locale.ROOT)
+	override fun toString() = plotName
 }
 
 class ReconfigurationConfig(

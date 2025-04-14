@@ -228,6 +228,7 @@ fun main() {
 //			y("time")
 //			color("job ordering")
 //			size = 2.5
+//			y.axis.name = "time (seconds)"
 //		}
 //	}.save("v2/path-type time.png")
 //
@@ -235,6 +236,7 @@ fun main() {
 //		points {
 //			x("problem")
 //			y("time")
+//			y.axis.name = "time (seconds)"
 //			color("method")
 //			size = 2.5
 //		}
@@ -244,6 +246,7 @@ fun main() {
 //		points {
 //			x("problem")
 //			y("time")
+//			y.axis.name = "time (seconds)"
 //			color("method")
 //			size = 2.5
 //		}
@@ -253,6 +256,7 @@ fun main() {
 //		points {
 //			x("problem")
 //			y("time")
+//			y.axis.name = "time (seconds)"
 //			color("method")
 //			size = 2.5
 //		}
@@ -273,9 +277,9 @@ fun main() {
 //	cutData(true) { it.config.isBase || it.config.numJobs != 1000 }.groupBy("method").plot {
 //		boxplot("#jobs", "time")
 //	}.save("v2/cut-method jobs time.png")
-	cutData(true, applyCandidateFilter = false) { it.config.isBase || it.config.numJobs != 1000 }.groupBy("precedence?").plot {
-		countPlot("#jobs")
-	}.save("v2/cut-method jobs precedence finish.png")
+//	cutData(true, applyCandidateFilter = false) { it.config.isBase || it.config.numJobs != 1000 }.groupBy("precedence?").plot {
+//		countPlot("#jobs")
+//	}.save("v2/cut-method jobs precedence finish.png")
 
 //	pathData(false) { it.config.isBase || it.config.numJobs != 1000 }.groupBy("job ordering").plot {
 //		boxplot("#jobs", "#constraints")
@@ -355,6 +359,7 @@ fun main() {
 //		points {
 //			x("problem")
 //			y("time")
+//			y.axis.name = "time (seconds)"
 //			color("method")
 //			size = 2.5
 //		}
@@ -382,11 +387,12 @@ fun main() {
 //		points {
 //			x("problem")
 //			y("time")
+//			y.axis.name = "time (seconds)"
 //			color("method")
 //			size = 2.5
 //		}
 //	}.save("v2/minimization-method instant final time.png")
-
+//
 //	minimizationData(false, listOf(MinimizationMethod.Random, MinimizationMethod.Tail)) { it.cutMethod == CutMethod.Instant }.plot {
 //		points {
 //			x("problem")
@@ -400,6 +406,7 @@ fun main() {
 //		points {
 //			x("problem")
 //			y("time")
+//			y.axis.name = "time (seconds)"
 //			color("job ordering")
 //			size = 2.5
 //		}
@@ -437,7 +444,7 @@ fun main() {
 //		}
 //	}.save("v2/path-type rating vs time.png")
 
-//	run {
+	run {
 //		val sharedResults = results.filter { it.graphPath != null && it.scratchPath != null }
 //		val data = dataFrameOf(
 //			"graph" to sharedResults.map { it.graphPath!!.pathConstructionTime },
@@ -446,6 +453,7 @@ fun main() {
 //		data.plot {
 //			boxplot("job ordering", "construction time") {
 //				y.axis.min = 0
+//				y.axis.name = "construction time (seconds)"
 //			}
 //		}.save("v2/path-type construction time.png")
 //		data.plot {
@@ -454,8 +462,8 @@ fun main() {
 //				y.axis.max = 5
 //			}
 //		}.save("v2/path-type construction time zoomed.png")
-//	}
-//	run {
+	}
+	run {
 //		val trials = results.flatMap { problem -> problem.trials.filter {
 //			it.cutMethod == CutMethod.Instant &&
 //					it.minimizationMethod == MinimizationMethod.Random &&
@@ -471,12 +479,16 @@ fun main() {
 //			boxplot("#jobs", "#explorations")
 //		}.save("v2/jobs explorations.png")
 //		data.plot {
-//			boxplot("#jobs", "avg exploration time")
+//			boxplot("#jobs", "avg exploration time") {
+//				y.axis.name = "average exploration time (seconds)"
+//			}
 //		}.save("v2/jobs exploration time.png")
 //		data.plot {
-//			boxplot("#jobs", "log10(avg exploration time)")
+//			boxplot("#jobs", "log10(avg exploration time)") {
+//				y.axis.name = "log10(avg exploration time) in seconds"
+//			}
 //		}.save("v2/jobs log exploration time.png")
-//	}
+	}
 //
 //	dataFrameOf(
 //		"construction time" to results.mapNotNull { it.scratchPath }.map { it.pathConstructionTime }
@@ -510,6 +522,7 @@ fun main() {
 //			points {
 //				x("problem")
 //				y("construction time")
+//				y.axis.name = "construction time (seconds)"
 //				color("job ordering")
 //			}
 //		}.save("v2/path-type construction time.png")
@@ -522,6 +535,7 @@ fun main() {
 //			points {
 //				x("problem")
 //				y("log10(construction time)")
+//				y.axis.name = "log10(construction time) in seconds"
 //				color("job ordering")
 //			}
 //		}.save("v2/path-type construction log time.png")

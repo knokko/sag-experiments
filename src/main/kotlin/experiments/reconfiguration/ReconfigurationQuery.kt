@@ -80,7 +80,7 @@ fun mainResults() {
 //
 //	}
 //
-//	run {
+	run {
 //		plot {
 //			countPlot(results.flatMap { problem ->
 //				val output = mutableListOf<String>()
@@ -104,7 +104,7 @@ fun mainResults() {
 //				output
 //			})
 //		}.save("cut-method finish.png")
-//
+
 //		plot {
 //			countPlot(results.flatMap { problem ->
 //				val output = mutableListOf<String>()
@@ -116,7 +116,7 @@ fun mainResults() {
 //				output
 //			})
 //		}.save("minimization-method finish.png")
-//	}
+	}
 //
 //	// Compare PathType and MinimizationMethod success counts
 //	run {
