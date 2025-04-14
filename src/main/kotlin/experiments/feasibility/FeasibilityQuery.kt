@@ -46,10 +46,16 @@ fun main() {
 	if (!threadPool.awaitTermination(5, TimeUnit.SECONDS)) throw Error("Timed out")
 
 	println("base stats: out of the ${results.size} problems:")
+	println("${results.count { it.config.precedence }} problems have precedence constraints")
+	println("${results.count { !it.config.precedence }} problems do not have precedence constraints")
 	println("${results.count { it.certainlyFeasible }} are certainly feasible")
 	println("${results.count { it.certainlyInfeasible }} are certainly infeasible, " +
 			"of which ${results.count { it.heuristicResult.failedBoundsTest }} failed the bounds test")
 	println("${results.count { !it.certainlyFeasible && !it.certainlyInfeasible }} are unsolved")
+	println("${results.count { it.certainlyFeasible && it.config.precedence }} certainly feasible problems have precedence constraints")
+	println("${results.count { it.certainlyInfeasible && it.config.precedence }} certainly infeasible problems have precedence constraints")
+	println("${results.count { it.certainlyFeasible && !it.config.precedence }} certainly feasible problems do not have precedence constraints")
+	println("${results.count { it.certainlyInfeasible && !it.config.precedence }} certainly infeasible problems do not have precedence constraints")
 	println()
 	for (numCores in 1 .. 5) {
 		val numProblems = results.count { !it.certainlyInfeasible && !it.certainlyFeasible && it.config.numCores == numCores }
@@ -130,7 +136,7 @@ fun main() {
 	fun classification(certainlyFeasible: Boolean, certainlyInfeasible: Boolean): String {
 		if (certainlyFeasible) return "feasible"
 		if (certainlyInfeasible) return "infeasible"
-		return "unsolved"
+		return "unidentified"
 	}
 
 	println("interval test: ${results.count { it.heuristicResult.certainlyInfeasible && it.heuristicResult.passedLoadTest }} out of ${results.count { it.heuristicResult.certainlyInfeasible }}")
@@ -153,7 +159,7 @@ fun main() {
 //			}
 //		}.save("total-utilization-vs-classification.png")
 //	}
-
+//
 //	run {
 //		results.sortWith { a, b ->
 //			if (a.config.numJobs == b.config.numJobs) {
@@ -161,11 +167,11 @@ fun main() {
 //			} else a.config.numJobs.compareTo(b.config.numJobs)
 //		}
 //		val data = mapOf(
-//			"jobs" to results.map { it.config.numJobs.toString() },
+//			"#jobs" to results.map { it.config.numJobs.toString() },
 //			"classification" to results.map { classification(it.certainlyFeasible, it.certainlyInfeasible) }
 //		)
 //		data.toDataFrame().groupBy("classification").plot {
-//			countPlot("jobs") {
+//			countPlot("#jobs") {
 //				fillColor("classification") {
 //					scale = categorical(listOf(Color.GREEN, Color.BLUE, Color.RED))
 //				}
@@ -221,7 +227,7 @@ fun main() {
 //		results.count { !it.config.precedence && it.z3Result.certainlyInfeasible && it.config.jobLength <= 20 && it.config.utilization == 90 },
 //		results.count { !it.config.precedence && it.cplexResult.certainlyInfeasible && it.config.jobLength <= 20 && it.config.utilization == 90 },
 //		results.count { !it.config.precedence && it.minisatResult?.certainlyInfeasible == true && it.config.jobLength <= 20 && it.config.utilization == 90 }
-//	), "number of problems solved", "short-infeasible-problems-vs-solvers.png")
+//	), "number of problems identified", "short-infeasible-problems-vs-solvers.png")
 //	solverBars(results.count { !it.config.precedence && it.certainlyFeasible && it.config.jobLength <= 20 && it.config.utilization == 90 }, listOf(
 //		results.count { !it.config.precedence && it.heuristicResult.certainlyFeasible && it.config.jobLength <= 20 && it.config.utilization == 90 },
 //		results.count { !it.config.precedence && it.z3Result.certainlyFeasible && it.config.jobLength <= 20 && it.config.utilization == 90 },
@@ -251,13 +257,13 @@ fun main() {
 //		results.count { isExclusiveFeasible(it, FeasibilityTest.Z3_MODEL1) },
 //		results.count { isExclusiveFeasible(it, FeasibilityTest.CPLEX) },
 //		0
-//	), "number of problems exclusively solved", "feasible-problems-exclusive-solvers.png")
+//	), "number of problems exclusively identified", "feasible-problems-exclusive-solvers.png")
 //	solverBars(results.count { it.certainlyInfeasible }, listOf(
 //		results.count { isExclusiveInfeasible(it, FeasibilityTest.HEURISTIC) },
 //		results.count { isExclusiveInfeasible(it, FeasibilityTest.Z3_MODEL1) },
 //		results.count { isExclusiveInfeasible(it, FeasibilityTest.CPLEX) },
 //		0
-//	), "number of problems exclusively solved", "infeasible-problems-exclusive-solvers.png")
+//	), "number of problems exclusively identified", "infeasible-problems-exclusive-solvers.png")
 
 	fun utilizationBars(test: FeasibilityTest, label: String, file: String, condition: (FeasibilitySolverResult) -> Boolean) {
 		val testResults = results.mapNotNull { it.getAll()[test] }
@@ -337,7 +343,7 @@ fun main() {
 		plot {
 			x(listOf("5", "20", "100", "5000"))
 			layout {
-				xAxisLabel = "average job duration"
+				xAxisLabel = "average worst-case execution time"
 				yAxisLabel = label
 			}
 			bars {
@@ -383,19 +389,19 @@ fun main() {
 //	createUtilizationJobsMap("total-feasible-matrix.png", { it.certainlyFeasible }, { true })
 //	createUtilizationJobsMap("total-infeasible-matrix.png", { it.certainlyInfeasible }, { true })
 //	createUtilizationJobsMap("total-matrix.png", { it.certainlyFeasible || it.certainlyInfeasible }, { true })
-//	utilizationBars(FeasibilityTest.HEURISTIC, "number of solved problems", "heuristic-utilization-vs-solved.png") { true }
-//	numJobsBars(FeasibilityTest.HEURISTIC, "number of solved problems", "heuristic-jobs-vs-solved.png") { true }
-//	numCoresBars(FeasibilityTest.HEURISTIC, "number of solved problems", "heuristic-cores-vs-solved.png") { true }
-//	durationBars(FeasibilityTest.HEURISTIC, "number of solved problems", "heuristic-duration-vs-solved.png") { true }
+//	utilizationBars(FeasibilityTest.HEURISTIC, "number of identified problems", "heuristic-utilization-vs-solved.png") { true }
+//	numJobsBars(FeasibilityTest.HEURISTIC, "number of identified problems", "heuristic-jobs-vs-solved.png") { true }
+//	numCoresBars(FeasibilityTest.HEURISTIC, "number of identified problems", "heuristic-cores-vs-solved.png") { true }
+//	durationBars(FeasibilityTest.HEURISTIC, "number of identified problems", "heuristic-duration-vs-solved.png") { true }
 //	createUtilizationJobsMap("heuristic-feasible-matrix.png", { it.heuristicResult.certainlyFeasible }, { true })
 //	createUtilizationJobsMap("heuristic-infeasible-matrix.png", { it.heuristicResult.certainlyInfeasible }, { true })
 //	createUtilizationJobsMap("heuristic-matrix.png", {
 //		it.heuristicResult.certainlyFeasible || it.heuristicResult.certainlyInfeasible }, { true }
 //	)
-//	utilizationBars(FeasibilityTest.Z3_MODEL1, "number of solved problems", "z3-utilization-vs-solved.png") { true }
-//	numJobsBars(FeasibilityTest.Z3_MODEL1, "number of solved problems", "z3-jobs-vs-solved.png") { true }
-//	numCoresBars(FeasibilityTest.Z3_MODEL1, "number of solved problems", "z3-cores-vs-solved.png") { true }
-//	durationBars(FeasibilityTest.Z3_MODEL1, "number of solved problems", "z3-duration-vs-solved.png") { true }
+//	utilizationBars(FeasibilityTest.Z3_MODEL1, "number of identified problems", "z3-utilization-vs-solved.png") { true }
+//	numJobsBars(FeasibilityTest.Z3_MODEL1, "number of identified problems", "z3-jobs-vs-solved.png") { true }
+//	numCoresBars(FeasibilityTest.Z3_MODEL1, "number of identified problems", "z3-cores-vs-solved.png") { true }
+//	durationBars(FeasibilityTest.Z3_MODEL1, "number of identified problems", "z3-duration-vs-solved.png") { true }
 //	utilizationBars(FeasibilityTest.Z3_MODEL1, "number of solved problems", "z3-no-prec-utilization-vs-solved.png") { !it.config.precedence }
 //	numJobsBars(FeasibilityTest.Z3_MODEL1, "number of solved problems", "z3-no-prec-jobs-vs-solved.png") { !it.config.precedence }
 //	numCoresBars(FeasibilityTest.Z3_MODEL1, "number of solved problems", "z3-no-prec-cores-vs-solved.png") { !it.config.precedence }
@@ -410,12 +416,12 @@ fun main() {
 //	createUtilizationJobsMap("z3-no-prec-matrix.png", {
 //		it.z3Result.certainlyFeasible || it.z3Result.certainlyInfeasible }, { !it.config.precedence }
 //	)
-//	utilizationBars(FeasibilityTest.CPLEX, "number of solved problems", "cplex-utilization-vs-solved.png") { true }
-//	numJobsBars(FeasibilityTest.CPLEX, "number of solved problems", "cplex-jobs-vs-solved.png") { true }
-//	numCoresBars(FeasibilityTest.CPLEX, "number of solved problems", "cplex-cores-vs-solved.png") { true }
-//	numCoresBars(FeasibilityTest.CPLEX, "number of solved problems", "cplex-feasible-cores-vs-solved.png") { it.certainlyFeasible }
-//	numCoresBars(FeasibilityTest.CPLEX, "number of solved problems", "cplex-infeasible-cores-vs-solved.png") { it.certainlyInfeasible }
-//	durationBars(FeasibilityTest.CPLEX, "number of solved problems", "cplex-duration-vs-solved.png") { true }
+//	utilizationBars(FeasibilityTest.CPLEX, "number of identified problems", "cplex-utilization-vs-solved.png") { true }
+//	numJobsBars(FeasibilityTest.CPLEX, "number of identified problems", "cplex-jobs-vs-solved.png") { true }
+//	numCoresBars(FeasibilityTest.CPLEX, "number of identified problems", "cplex-cores-vs-solved.png") { true }
+//	numCoresBars(FeasibilityTest.CPLEX, "number of identified problems", "cplex-feasible-cores-vs-solved.png") { it.certainlyFeasible }
+//	numCoresBars(FeasibilityTest.CPLEX, "number of identified problems", "cplex-infeasible-cores-vs-solved.png") { it.certainlyInfeasible }
+//	durationBars(FeasibilityTest.CPLEX, "number of identified problems", "cplex-duration-vs-solved.png") { true }
 //	createUtilizationJobsMap("cplex-feasible-matrix.png", { it.cplexResult.certainlyFeasible }, { true })
 //	createUtilizationJobsMap("cplex-infeasible-matrix.png", { it.cplexResult.certainlyInfeasible }, { true })
 //	createUtilizationJobsMap("cplex-matrix.png", {
@@ -432,7 +438,7 @@ fun main() {
 			countPlot("cores") {
 				fillColor("solver")
 				x.axis.name = "number of cores"
-				y.axis.name = "number of solved problems"
+				y.axis.name = "number of identified problems"
 			}
 		}.save(file)
 	}
@@ -440,55 +446,60 @@ fun main() {
 //	coresClassification("cores-vs-classification.png") { it.isSolved }
 //	coresClassification("only-prec-cores-vs-classification.png") { it.isSolved && it.config.precedence }
 //	coresClassification("no-prec-cores-vs-classification.png") { it.isSolved && !it.config.precedence }
-//	utilizationBars(FeasibilityTest.MINISAT, "number of solved problems", "minisat-utilization-vs-solved.png") { !it.config.precedence }
-//	numJobsBars(FeasibilityTest.MINISAT, "number of solved problems", "minisat-jobs-vs-solved.png") { !it.config.precedence }
-//	numCoresBars(FeasibilityTest.MINISAT, "number of solved problems", "minisat-cores-vs-solved.png") { !it.config.precedence }
-//	numCoresBars(FeasibilityTest.MINISAT, "number of solved problems", "minisat-feasible-cores-vs-solved.png") { it.certainlyFeasible && !it.config.precedence }
-//	numCoresBars(FeasibilityTest.MINISAT, "number of solved problems", "minisat-infeasible-cores-vs-solved.png") { it.certainlyInfeasible  && !it.config.precedence }
-//	durationBars(FeasibilityTest.MINISAT, "number of solved problems", "minisat-duration-vs-solved.png") { true }
+//	utilizationBars(FeasibilityTest.MINISAT, "number of identified problems", "minisat-utilization-vs-solved.png") { !it.config.precedence }
+//	numJobsBars(FeasibilityTest.MINISAT, "number of identified problems", "minisat-jobs-vs-solved.png") { !it.config.precedence }
+//	numCoresBars(FeasibilityTest.MINISAT, "number of identified problems", "minisat-cores-vs-solved.png") { !it.config.precedence }
+//	numCoresBars(FeasibilityTest.MINISAT, "number of identified problems", "minisat-feasible-cores-vs-solved.png") { it.certainlyFeasible && !it.config.precedence }
+//	numCoresBars(FeasibilityTest.MINISAT, "number of identified problems", "minisat-infeasible-cores-vs-solved.png") { it.certainlyInfeasible  && !it.config.precedence }
+//	durationBars(FeasibilityTest.MINISAT, "number of identified problems", "minisat-duration-vs-solved.png") { true }
 //	createUtilizationJobsMap("minisat-feasible-matrix.png", { it.minisatResult!!.certainlyFeasible }, { !it.config.precedence })
 //	createUtilizationJobsMap("minisat-infeasible-matrix.png", { it.minisatResult!!.certainlyInfeasible }, { !it.config.precedence })
 //	createUtilizationJobsMap("minisat-matrix.png", {
 //		it.minisatResult!!.certainlyFeasible || it.minisatResult!!.certainlyInfeasible }, { !it.config.precedence }
 //	)
 
-	run {
-		val sharedResults = results.filter {
-			it.heuristicResult.isSolved && it.z3Result.isSolved && it.cplexResult.isSolved && it.minisatResult?.isSolved == true && it.certainlyFeasible
-		}
-		dataFrameOf(
-			"heuristic" to sharedResults.map { it.heuristicResult.spentSeconds ?: 0.0 },
-			"Z3" to sharedResults.map { it.z3Result.spentSeconds ?: 0.0 },
-			"CPLEX" to sharedResults.map { it.cplexResult.spentSeconds ?: 0.0 },
-			"Minisat" to sharedResults.map { it.minisatResult!!.spentSeconds ?: 0.0 }
-		).gather("heuristic", "Z3", "CPLEX", "Minisat").into("solver", "execution time").plot {
-			boxplot("solver", "execution time")
-		}.save("spent-seconds-feasible.png")
-	}
-
-	run {
-		val sharedResults = results.filter {
-			it.heuristicResult.isSolved && it.z3Result.isSolved && it.cplexResult.isSolved &&
-					it.minisatResult?.isSolved == true && it.certainlyInfeasible && !it.heuristicResult.failedBoundsTest
-		}
-		dataFrameOf(
-			"Z3" to sharedResults.map { it.z3Result.spentSeconds ?: 0.0 },
-			"CPLEX" to sharedResults.map { it.cplexResult.spentSeconds ?: 0.0 },
-			"Minisat" to sharedResults.map { it.minisatResult!!.spentSeconds ?: 0.0 }
-		).gather("Z3", "CPLEX", "Minisat").into("solver", "execution time").plot {
-			boxplot("solver", "execution time")
-		}.save("spent-seconds-infeasible.png")
-	}
-
-	run {
-		for (solver in arrayOf(FeasibilityTest.HEURISTIC, FeasibilityTest.Z3_MODEL1, FeasibilityTest.CPLEX, FeasibilityTest.MINISAT)) {
-			dataFrameOf(
-				solver.name to results.mapNotNull { it.getAll()[solver] }.mapNotNull { it.spentSeconds }
-            ).gather(solver.name).into("solver", "execution time").plot {
-				boxplot("solver", "execution time")
-				layout.size = Pair(200, 300)
-				y.axis.max = 60.0
-			}.save("spent-seconds-${solver.name}.png")
-		}
-	}
+//	run {
+//		val sharedResults = results.filter {
+//			it.heuristicResult.isSolved && it.z3Result.isSolved && it.cplexResult.isSolved && it.minisatResult?.isSolved == true && it.certainlyFeasible
+//		}
+//		dataFrameOf(
+//			"heuristic" to sharedResults.map { it.heuristicResult.spentSeconds ?: 0.0 },
+//			"Z3" to sharedResults.map { it.z3Result.spentSeconds ?: 0.0 },
+//			"CPLEX" to sharedResults.map { it.cplexResult.spentSeconds ?: 0.0 },
+//			"Minisat" to sharedResults.map { it.minisatResult!!.spentSeconds ?: 0.0 }
+//		).gather("heuristic", "Z3", "CPLEX", "Minisat").into("solver", "execution time").plot {
+//			boxplot("solver", "execution time") {
+//				y.axis.name = "runtime (seconds)"
+//			}
+//		}.save("spent-seconds-feasible.png")
+//	}
+//
+//	run {
+//		val sharedResults = results.filter {
+//			it.heuristicResult.isSolved && it.z3Result.isSolved && it.cplexResult.isSolved &&
+//					it.minisatResult?.isSolved == true && it.certainlyInfeasible && !it.heuristicResult.failedBoundsTest
+//		}
+//		dataFrameOf(
+//			"Z3" to sharedResults.map { it.z3Result.spentSeconds ?: 0.0 },
+//			"CPLEX" to sharedResults.map { it.cplexResult.spentSeconds ?: 0.0 },
+//			"Minisat" to sharedResults.map { it.minisatResult!!.spentSeconds ?: 0.0 }
+//		).gather("Z3", "CPLEX", "Minisat").into("solver", "execution time").plot {
+//			boxplot("solver", "execution time") {
+//				y.axis.name = "runtime (seconds)"
+//			}
+//		}.save("spent-seconds-infeasible.png")
+//	}
+//
+//	run {
+//		for (solver in arrayOf(FeasibilityTest.HEURISTIC, FeasibilityTest.Z3_MODEL1, FeasibilityTest.CPLEX, FeasibilityTest.MINISAT)) {
+//			dataFrameOf(
+//				solver.name to results.mapNotNull { it.getAll()[solver] }.mapNotNull { it.spentSeconds }
+//            ).gather(solver.name).into("solver", "execution time").plot {
+//				boxplot("solver", "execution time")
+//				layout.size = Pair(200, 300)
+//				y.axis.max = 60.0
+//				y.axis.name = "runtime (seconds)"
+//			}.save("spent-seconds-${solver.name}.png")
+//		}
+//	}
 }
