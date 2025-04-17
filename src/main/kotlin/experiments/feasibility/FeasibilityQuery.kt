@@ -429,7 +429,7 @@ fun main() {
 //	)
 
 	fun coresClassification(file: String, condition: (FeasibilitySolverResult) -> Boolean) {
-		val groupResults = results.flatMap { it.getAll().values }.filter(condition).sortedBy { it.config.numCores }
+		val groupResults = results.flatMap { it.getAll().values }.filter(condition).sortedBy { it.config.numCores }.sortedBy { it.solver.ordinal }
 		val data = mapOf(
 			"cores" to groupResults.map { it.config.numCores.toString() },
 			"solver" to groupResults.map { it.solver.name }
