@@ -436,7 +436,14 @@ fun main() {
 		)
 		data.toDataFrame().groupBy("solver").plot {
 			countPlot("cores") {
-				fillColor("solver")
+				fillColor("solver") {
+					scale = categorical(
+						"heuristic" to Color.rgb(228, 26, 28),
+						"z3" to Color.rgb(55, 126, 184),
+						"cplex" to Color.rgb(77, 175, 74),
+						"minisat" to Color.rgb(152, 78, 163)
+					)
+				}
 				x.axis.name = "number of cores"
 				y.axis.name = "number of identified problems"
 			}
