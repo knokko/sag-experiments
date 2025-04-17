@@ -1,11 +1,13 @@
 package experiments
 
 import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.kandy.dsl.categorical
 import org.jetbrains.kotlinx.kandy.dsl.plot
 import org.jetbrains.kotlinx.kandy.letsplot.export.save
 import org.jetbrains.kotlinx.kandy.letsplot.feature.layout
 import org.jetbrains.kotlinx.kandy.letsplot.layers.line
 import org.jetbrains.kotlinx.kandy.letsplot.layers.points
+import org.jetbrains.kotlinx.kandy.util.color.Color
 import org.jetbrains.kotlinx.statistics.binning.BinsOption
 import org.jetbrains.kotlinx.statistics.kandy.layers.countPlot
 import org.jetbrains.kotlinx.statistics.kandy.layers.histogram
@@ -24,8 +26,8 @@ fun reconfigurations() {
 	val numJobsToTimeOutsFast = mutableListOf<Int>()
 	val numJobsToTimeOutsInstant = mutableListOf<Int>()
 
-	//val prefix = "threaded-"
-	val prefix = ""
+	val prefix = "threaded-"
+	//val prefix = ""
 	val data = run {
 		val caseColumn = mutableListOf<Int>()
 		val jobsColumn = mutableListOf<Int>()
@@ -110,7 +112,7 @@ fun reconfigurations() {
 			"time" to timeColumn,
 			"sqrt(time)" to timeColumn.map { sqrt(it.toDouble()) },
 			"timed out" to timedOutColumn
-		)
+		).sortByDesc("method")
 	}
 
 	println("smallest #jobs is ${data.min("#jobs")} and largest #jobs is ${data.max("#jobs")}")
@@ -120,17 +122,23 @@ fun reconfigurations() {
 //			x.axis.max = 20000
 //			y.axis.min = 0
 //			y.axis.max = 60
+//			fillColor("method") {
+//				scale = categorical(
+//					"instant" to Color.rgb(228, 26, 28),
+//					"fast" to Color.rgb(55, 126, 184),
+//				)
+//			}
 //		}
 //	}.save("v3/${prefix}jobs distribution.png")
-	data.shuffle().groupBy("method").plot {
-		points {
-			x("#jobs")
-			y("time")
-			y.axis.name = "time (seconds)"
-			color("method")
-			size = 2.0
-		}
-	}.save("v3/${prefix}jobs vs time.png")
+//	data.shuffle().groupBy("method").plot {
+//		points {
+//			x("#jobs")
+//			y("time")
+//			y.axis.name = "time (seconds)"
+//			color("method")
+//			size = 2.0
+//		}
+//	}.save("v3/${prefix}jobs vs time.png")
 //	data.shuffle().groupBy("method").plot {
 //		points {
 //			x("#jobs")
@@ -149,29 +157,35 @@ fun reconfigurations() {
 //			y.axis.min = 1
 //		}
 //	}.save("v3/${prefix}jobs vs constraints.png")
-	data.shuffle().groupBy("method").plot {
-		points {
-			x("#jobs")
-			y("sqrt(time)")
-			y.axis.name = "sqrt(time) in seconds"
-			color("method")
-			size = 2.0
-		}
-	}.save("v3/${prefix}jobs vs sqrt time.png")
+//	data.shuffle().groupBy("method").plot {
+//		points {
+//			x("#jobs")
+//			y("sqrt(time)")
+//			y.axis.name = "sqrt(time) in seconds"
+//			color("method")
+//			size = 2.0
+//		}
+//	}.save("v3/${prefix}jobs vs sqrt time.png")
 //	data.filterBy("timed out").plot {
 //		countPlot("method") {
 //			y.axis.name = "#time outs"
 //		}
 //	}.save("v3/${prefix}method timeout.png")
-//	data.filterBy("timed out").groupBy("method").plot {
-//		histogram("#jobs", binsOption = BinsOption.byWidth(2000.0)) {
-//			x.axis.min = 0
-//			x.axis.max = 20000
-//			y.axis.min = 0
-//			y.axis.max = 60
-//			y.axis.name = "#time-outs"
-//		}
-//	}.save("v3/${prefix}method jobs timeout.png")
+	data.filterBy("timed out").groupBy("method").plot {
+		histogram("#jobs", binsOption = BinsOption.byWidth(2000.0)) {
+			x.axis.min = 0
+			//x.axis.max = 20000
+			y.axis.min = 0
+			y.axis.max = 60
+			y.axis.name = "#time-outs"
+			fillColor("method") {
+				scale = categorical(
+					"instant" to Color.rgb(228, 26, 28),
+					"fast" to Color.rgb(55, 126, 184),
+				)
+			}
+		}
+	}.save("v3/${prefix}method jobs timeout.png")
 
 	val massJobsToTimeOutsFast = IntArray(numJobsToTimeOutsFast.size)
 	val massJobsToTimeOutsInstant = IntArray(numJobsToTimeOutsInstant.size)
@@ -190,7 +204,12 @@ fun reconfigurations() {
 //		line {
 //			x("#jobs")
 //			y("#timeouts")
-//			color("method")
+//			color("method") {
+//				scale = categorical(
+//					"instant" to Color.rgb(228, 26, 28),
+//					"fast" to Color.rgb(55, 126, 184),
+//				)
+//			}
 //			x.axis.name = "X: the number of jobs"
 //			y.axis.name = "#time-outs for at most X jobs"
 //		}

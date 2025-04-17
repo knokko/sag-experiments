@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.statistics.kandy.layers.countPlot
 import org.jetbrains.kotlinx.statistics.kandy.statplots.boxplot
 import org.jetbrains.kotlinx.statistics.stats.mean
 import java.io.File
+import java.lang.Integer.parseInt
 import java.util.*
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
@@ -107,7 +108,7 @@ fun main() {
 		val jitter = mutableListOf<String>()
 		val precedence = mutableListOf<Boolean>()
 		for ((index, problem) in sharedResults.withIndex()) {
-			for (trial in problem.trials.filter(condition).filter { candidates.contains(it.cutMethod) }.shuffled()) {
+			for (trial in problem.trials.filter(condition).filter { candidates.contains(it.cutMethod) }.shuffled().sortedBy { -it.cutMethod.ordinal }) {
 				methods.add(trial.cutMethod.toString())
 				paths.add(trial.pathType.toString())
 				problems.add(index)
@@ -131,6 +132,7 @@ fun main() {
 			"#peak constraints" to numOriginalConstraints,
 			"time" to time,
 			"#jobs" to numJobs,
+			"#intJobs" to numJobs.map { parseInt(it) },
 			"#tasks" to numTasks,
 			"utilization" to utilization,
 			"#cores" to numCores,
@@ -189,7 +191,14 @@ fun main() {
 //		points {
 //			x("problem")
 //			y("#constraints")
-//			color("method")
+//			color("method") {
+//				scale = categorical(
+//					"instant" to Color.rgb(228, 26, 28),
+//					"fast" to Color.rgb(55, 126, 184),
+//					"slow" to Color.rgb(77, 175, 74),
+//					"old" to Color.rgb(152, 78, 163)
+//				)
+//			}
 //			size = 2.5
 //		}
 //	}.save("v2/cut-method constraints.png")
@@ -197,7 +206,14 @@ fun main() {
 //		points {
 //			x("problem")
 //			y("#peak constraints")
-//			color("method")
+//			color("method") {
+//				scale = categorical(
+//					"instant" to Color.rgb(228, 26, 28),
+//					"fast" to Color.rgb(55, 126, 184),
+//					"slow" to Color.rgb(77, 175, 74),
+//					"old" to Color.rgb(152, 78, 163)
+//				)
+//			}
 //			size = 2.5
 //			y.axis.min = 1
 //		}
@@ -206,7 +222,14 @@ fun main() {
 //		points {
 //			x("problem")
 //			y("#peak constraints")
-//			color("method")
+//			color("method") {
+//				scale = categorical(
+//					"instant" to Color.rgb(228, 26, 28),
+//					"fast" to Color.rgb(55, 126, 184),
+//					"slow" to Color.rgb(77, 175, 74),
+//					"old" to Color.rgb(152, 78, 163)
+//				)
+//			}
 //			size = 2.5
 //			y.axis.min = 1
 //			y.axis.max = 1000
@@ -237,7 +260,14 @@ fun main() {
 //			x("problem")
 //			y("time")
 //			y.axis.name = "time (seconds)"
-//			color("method")
+//			color("method") {
+//				scale = categorical(
+//					"instant" to Color.rgb(228, 26, 28),
+//					"fast" to Color.rgb(55, 126, 184),
+//					"slow" to Color.rgb(77, 175, 74),
+//					"old" to Color.rgb(152, 78, 163)
+//				)
+//			}
 //			size = 2.5
 //		}
 //	}.save("v2/cut-method time.png")
@@ -257,7 +287,12 @@ fun main() {
 //			x("problem")
 //			y("time")
 //			y.axis.name = "time (seconds)"
-//			color("method")
+//			color("method") {
+//				scale = categorical(
+//					"instant" to Color.rgb(228, 26, 28),
+//					"fast" to Color.rgb(55, 126, 184),
+//				)
+//			}
 //			size = 2.5
 //		}
 //	}.save("v2/cut-method final time.png")
@@ -266,7 +301,12 @@ fun main() {
 //		points {
 //			x("problem")
 //			y("#constraints")
-//			color("method")
+//			color("method") {
+//				scale = categorical(
+//					"instant" to Color.rgb(228, 26, 28),
+//					"fast" to Color.rgb(55, 126, 184),
+//				)
+//			}
 //			size = 2.5
 //		}
 //	}.save("v2/cut-method final constraints.png")
@@ -301,6 +341,18 @@ fun main() {
 //		countPlot("#jobs")
 //	}.save("v2/minimization-method jobs finish.png")
 
+//	cutData(true, applyCandidateFilter = false) { it.config.isBase || it.config.numJobs != 1000 }.sortBy("#intJobs").groupBy("method").plot {
+//		countPlot("#jobs") {
+//			fillColor("method") {
+//				scale = categorical(
+//					"instant" to Color.rgb(228, 26, 28),
+//					"fast" to Color.rgb(55, 126, 184),
+//					"slow" to Color.rgb(77, 175, 74),
+//					"old" to Color.rgb(152, 78, 163)
+//				)
+//			}
+//		}
+//	}.save("v2/cut-method jobs finish.png")
 //
 //	cutData(false) { it.config.isBase || it.config.numTasks != 4 }.sortBy("#tasks").groupBy("method").plot {
 //		boxplot("#tasks", "#constraints")
@@ -309,7 +361,16 @@ fun main() {
 //		boxplot("#tasks", "time")
 //	}.save("v2/cut-method tasks time.png")
 //	cutData(true, applyCandidateFilter = false) { it.config.isBase || it.config.numTasks != 4 }.sortBy("#tasks").groupBy("method").plot {
-//		countPlot("#tasks")
+//		countPlot("#tasks") {
+//			fillColor("method") {
+//				scale = categorical(
+//					"instant" to Color.rgb(228, 26, 28),
+//					"fast" to Color.rgb(55, 126, 184),
+//					"slow" to Color.rgb(77, 175, 74),
+//					"old" to Color.rgb(152, 78, 163)
+//				)
+//			}
+//		}
 //	}.save("v2/cut-method tasks finish.png")
 //
 //	cutData(false) { it.config.isBase || it.config.utilization != 60 }.sortBy("utilization").groupBy("method").plot {
@@ -322,7 +383,16 @@ fun main() {
 //		}
 //	}.save("v2/cut-method utilization time.png")
 //	cutData(true, applyCandidateFilter = false) { it.config.isBase || it.config.utilization != 60 }.sortBy("utilization").groupBy("method").plot {
-//		countPlot("utilization")
+//		countPlot("utilization") {
+//			fillColor("method") {
+//				scale = categorical(
+//					"instant" to Color.rgb(228, 26, 28),
+//					"fast" to Color.rgb(55, 126, 184),
+//					"slow" to Color.rgb(77, 175, 74),
+//					"old" to Color.rgb(152, 78, 163)
+//				)
+//			}
+//		}
 //	}.save("v2/cut-method utilization finish.png")
 //
 //	cutData(false) { it.config.isBase || it.config.numCores != 3 }.sortBy("#cores").groupBy("method").plot {
@@ -332,7 +402,16 @@ fun main() {
 //		boxplot("#cores", "time")
 //	}.save("v2/cut-method cores time.png")
 //	cutData(true, applyCandidateFilter = false) { it.config.isBase || it.config.numCores != 3 }.sortBy("#cores").groupBy("method").plot {
-//		countPlot("#cores")
+//		countPlot("#cores") {
+//			fillColor("method") {
+//				scale = categorical(
+//					"instant" to Color.rgb(228, 26, 28),
+//					"fast" to Color.rgb(55, 126, 184),
+//					"slow" to Color.rgb(77, 175, 74),
+//					"old" to Color.rgb(152, 78, 163)
+//				)
+//			}
+//		}
 //	}.save("v2/cut-method cores finish.png")
 //
 //	cutData(false) { it.config.isBase || it.config.jitter != 20 }.sortBy("jitter").groupBy("method").plot {
@@ -342,7 +421,16 @@ fun main() {
 //		boxplot("jitter", "time")
 //	}.save("v2/cut-method jitter time.png")
 //	cutData(true, applyCandidateFilter = false) { it.config.isBase || it.config.jitter != 20 }.sortBy("jitter").groupBy("method").plot {
-//		countPlot("jitter")
+//		countPlot("jitter") {
+//			fillColor("method") {
+//				scale = categorical(
+//					"instant" to Color.rgb(228, 26, 28),
+//					"fast" to Color.rgb(55, 126, 184),
+//					"slow" to Color.rgb(77, 175, 74),
+//					"old" to Color.rgb(152, 78, 163)
+//				)
+//			}
+//		}
 //	}.save("v2/cut-method jitter finish.png")
 //
 //	cutData(false) { true }.groupBy("method").plot {
@@ -352,7 +440,16 @@ fun main() {
 //		boxplot("precedence?", "time")
 //	}.save("v2/cut-method precedence time.png")
 //	cutData(true, applyCandidateFilter = false) { true }.groupBy("method").plot {
-//		countPlot("precedence?")
+//		countPlot("precedence?") {
+//			fillColor("method") {
+//				scale = categorical(
+//					"instant" to Color.rgb(228, 26, 28),
+//					"fast" to Color.rgb(55, 126, 184),
+//					"slow" to Color.rgb(77, 175, 74),
+//					"old" to Color.rgb(152, 78, 163)
+//				)
+//			}
+//		}
 //	}.save("v2/cut-method precedence finish.png")
 
 //	minimizationData(true) { it.cutMethod == CutMethod.Instant }.plot {

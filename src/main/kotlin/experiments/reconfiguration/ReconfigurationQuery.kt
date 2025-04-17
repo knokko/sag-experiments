@@ -96,7 +96,7 @@ fun mainResults() {
 //		plot {
 //			countPlot(results.flatMap { problem ->
 //				val output = mutableListOf<String>()
-//				for (cutMethod in CutMethod.entries) {
+//				for (cutMethod in CutMethod.entries.reversed()) {
 //					if (problem.trials.any { it.cutMethod == cutMethod }) {
 //						output.add(cutMethod.toString())
 //					}
