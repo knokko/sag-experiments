@@ -394,7 +394,12 @@ fun main() {
 //			x("problem")
 //			y("time")
 //			y.axis.name = "time (seconds)"
-//			color("method")
+//			color("method") {
+//				scale = categorical(
+//					"random" to Color.rgb(228, 26, 28),
+//					"late" to Color.rgb(55, 126, 184),
+//				)
+//			}
 //			size = 2.5
 //		}
 //	}.save("v2/minimization-method instant final time.png")
@@ -403,7 +408,12 @@ fun main() {
 //		points {
 //			x("problem")
 //			y("#constraints")
-//			color("method")
+//			color("method") {
+//				scale = categorical(
+//					"random" to Color.rgb(228, 26, 28),
+//					"late" to Color.rgb(55, 126, 184),
+//				)
+//			}
 //			size = 2.5
 //		}
 //	}.save("v2/minimization-method instant final constraints.png")
